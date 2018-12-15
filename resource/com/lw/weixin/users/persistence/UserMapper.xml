@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lw.weixin.users.persistence.UserMapper">
+    <parameterMap type="Users" id="UsersparaMap">
+    	<parameter property="id"  resultMap="id"/>
+    	<parameter property="name" resultMap="name"/>
+    	<parameter property="userName" resultMap="username"/>
+    	<parameter property="email" resultMap="email"/>
+    	<parameter property="password" resultMap="password"/>
+    	<parameter property="enable" resultMap="enable"/>
+    	<parameter property="registDate" resultMap="regist_date"/>
+    	<parameter property="registIp" resultMap="regist_ip"/>
+    	<parameter property="lastLoginDate" resultMap="last_login_Date"/>
+    	<parameter property="lastLoginIp" resultMap="last_login_ip"/>
+    	<parameter property="salt" resultMap="salt"/>
+    	<parameter property="groupid" resultMap="groupid"/>
+    	
+    </parameterMap>
+    
+    <resultMap type="Users" id="UsersResultMap">
+    	<id property="id" column="id"/>
+    	<result property="name" column="name"/>
+    	<result property="userName" column="username"/>
+    	<result property="email" column="email"/>
+    	<result property="password" column="password"/>
+    	<result property="enable" column="enable"/>
+    	<result property="registDate" column="regist_date"/>
+    	<result property="registIp" column="regist_ip"/>
+    	<result property="lastLoginDate" column="last_login_Date"/>
+    	<result property="lastLoginIp" column="last_login_ip"/>    	
+    	<result property="salt" column="salt"/>
+    	<result property="groupid" column="groupid"/>
+    </resultMap>
+    
+    <sql id="userColumn"><![CDATA[id,userName,password,enable,regist_date,regist_ip,last_login_date,last_login_ip,salt,name,email,groupid]]></sql>
+  	
+  	<select id="getById" parameterType="int" resultMap="UsersResultMap">SELECT <include refid="userColumn"/>  from sys_users where id=#{id};</select>
+	<select id="getUserByName" parameterType="string" resultMap="UsersResultMap">SELECT <include refid="userColumn"/>  from sys_users where username=#{username};</select>
+	<select id="getCountByName" parameterType="string" resultType="int" ><![CDATA[SELECT count(1) from sys_users where username=#{username}]]></select>
+	<select id="getList" resultMap="UsersResultMap">
+		SELECT <include refid="userColumn"/> FROM sys_users order by id desc
+		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+	<select id="getCount" resultType="int">SELECT count(1) FROM sys_users;</select>
+	
+	
+	<update id="updateLoginInfo" parameterType="map"><![CDATA[UPDATE sys_users set last_login_Date=now(),last_login_ip=#{lastip} where id=#{userId};]]></update>
+	<update id="updatePassword" parameterType="map"><![CDATA[UPDATE sys_users set password=#{password},salt=#{salt} where id=#{userId};]]></update>
+	<update id="updateUserEnable" parameterType="map"><![CDATA[UPDATE sys_users set enable=#{enable} where id=#{userId};]]></update>
+	
+  	<insert id="saveUser" parameterMap="UsersparaMap" keyProperty="id" useGeneratedKeys="true">
+    	<![CDATA[
+    		insert into sys_users(name,username,email,password,salt,enable,regist_date,regist_ip,last_login_Date,last_login_ip,groupid) 
+    		values(#{name},#{userName},#{email},#{password},#{salt},#{enable},#{registDate},#{registIp},#{lastLoginDate},#{lastLoginIp},#{groupid});
+    	]]>
+	</insert>
+	
+	<insert id="editById" parameterMap="UsersparaMap" keyProperty="id" useGeneratedKeys="true">
+    	<![CDATA[
+    		UPDATE sys_users set name=#{name},username=#{userName},email=#{email},enable=#{enable},groupid=#{groupid} where id=#{id};
+    	]]>
+	</insert>
+		
+	<delete id="delById">DELETE FROM sys_users where id in<foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach></delete>
+</mapper>

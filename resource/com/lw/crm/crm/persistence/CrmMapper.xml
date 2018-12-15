@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crm.persistence.CrmMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="Crm" id="CrmparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="number" resultMap="number" />
+		<parameter property="title" resultMap="title" />
+		<parameter property="price" resultMap="price" />
+		<parameter property="type" resultMap="type" />
+		<parameter property="date" resultMap="date" />
+		<parameter property="uid" resultMap="uid" />
+		<parameter property="stocknum" resultMap="stocknum" />
+		<parameter property="sdate" resultMap="sdate" />
+		<parameter property="edate" resultMap="edate" />
+	</parameterMap>
+	<resultMap type="Crm" id="CrmResultMap">
+		<id property="id" column="id" />
+		<result property="number" column="number" />
+		<result property="title" column="title" />
+		<result property="price" column="price" />
+		<result property="type" column="type" />
+		<result property="date" column="date" />
+		<result property="uid" column="uid" />
+		<result property="stocknum" column="stocknum" />
+		<result property="sdate" column="sdate" />
+		<result property="edate" column="edate" />
+		<association property="crmBuyInfo" fetchType="eager" column="id" select="com.lw.crm.crmbuyinfo.persistence.CrmBuyInfoMapper.getById"></association>
+		<association property="crmStock" fetchType="lazy" column="id" select="com.lw.crm.crmstock.persistence.CrmStockMapper.getById"></association>
+	
+	
+	</resultMap>
+	
+	<sql id="CrmColumn">id,number,title,price,type,date,uid,stocknum</sql>
+	
+	
+	<!--查询信息总条数 -->
+	<select id="getCount" resultType="int" parameterType="String">
+		select count(1) from crm_product
+		<where>
+			1 = 1
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+			 <if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and sdate != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if> 
+		</where>
+	</select>
+	
+	
+	<!--根据产品编号,日期,查询  -->
+	<select id="getList" resultMap="CrmResultMap" parameterType="Crm" useCache="false">
+	    select
+		<include refid="CrmColumn" />
+		from crm_product  
+		<where>
+			1 = 1
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+			<if test="title != null and title != ''">
+				<bind name="pattern" value="'%' + title + '%'" />
+				AND title LIKE #{pattern}
+			</if>
+			<if test="type != null and type !=0 ">
+				AND type = #{type}
+			</if>
+			 <if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and sdate != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if> 
+			
+		</where>
+		 order by id desc 
+		 <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+	
+	<!--添加产品（save）方法 -->
+	<insert id="save" parameterType="Crm"
+		keyColumn="id" useGeneratedKeys="true">
+		<![CDATA[
+    		insert into crm_product(number,title,price,type,uid,stocknum)
+    		values(#{number},#{title},#{price,jdbcType=DOUBLE},#{type},#{uid},#{stocknum});
+    	]]>
+	</insert>
+	
+	<!--清理数据 -->
+	<!-- 批量删除任务信息 -->
+	<delete id="delete" parameterType="int">
+		delete from crm_product where id in
+		<foreach item="crmItem" collection="array" open="("
+			separator="," close=")">
+			#{crmItem}
+		</foreach>
+	</delete>
+	
+	<!--修改 -->
+	<select id="getById" resultMap="CrmResultMap"
+		parameterType="Crm">
+	    select
+		<include refid="CrmColumn" />
+		from crm_product 
+		 where id=#{_parameter} 
+	</select>
+	<update id="editById" parameterType="Crm">
+		UPDATE
+		crm_product
+		<set>
+			<if test="price != null and price!=''">
+				price = #{price},
+			</if>
+			<if test="type != null and type!=''">
+				type = #{type},
+			</if>
+			<if test="stocknum != null and stocknum!=''">
+				stocknum = #{stocknum},
+			</if>
+			
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delById">
+	   delete from crm_product where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+	
+	
+	
+	</mapper>

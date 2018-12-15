@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmuserscertificate.persistence.CrmUserScertificateMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmUserScertificate" id="CrmUserScertificateparaMap">
+	<parameter property="id" 			 resultMap="id" />
+	<parameter property="user_id" 		 resultMap="user_id" 				/>
+	<parameter property="startdate" 	 resultMap="startdate"		  		/>
+	<parameter property="enddate" 	 	 resultMap="enddate"  	/>
+	<parameter property="appendix" 		 resultMap="appendix" 	/>
+	<parameter property="type"		 resultMap="type"	 			/>
+	<parameter property="sex" 		 resultMap="sex" 		/>
+	<parameter property="age" 		 resultMap="age"		 />
+</parameterMap>
+
+<resultMap type="CrmUserScertificate" id="CrmUserScertificateResultMap">
+    <id property="id" column="id" />
+	<result property="user_id" 		 column="user_id" 				/>
+	<result property="startdate" 	 column="startdate"		  		/>
+	<result property="enddate" 	 	 column="enddate"  	/>
+	<result property="appendix" 	 column="appendix" 	/>
+	<result property="type"		 	 column="type"	 			/>
+	<result property="sex" 		 	 column="sex" 		/>
+	<result property="age" 		 	 column="age"		 />
+</resultMap>
+        <sql id="CrmUserScertificateColumn">id,user_id,startdate,enddate,appendix,type,sex,age</sql>
+
+<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="CrmUserScertificate">
+		<![CDATA[
+    		insert into crm_users_certificate (user_id,startdate,enddate,appendix,type,sex,age) 
+    		values (#{user_id},#{startdate},#{enddate},#{appendix},#{type},#{sex},#{age});
+    	]]>
+		
+	</insert>
+ <select id="getList" parameterType="CrmUserScertificate" resultMap="CrmUserScertificateResultMap">
+ 		select * from crm_users_certificate where 1=1
+ 		<if test="user_id != null and user_id !=''">
+ 			and user_id=#{user_id}
+ 		</if>
+ 		<if test="startdate != null and startdate !=''">
+ 			and startdate=#{startdate}
+ 		</if>
+ 		<if test="enddate != null and enddate !=''">
+ 			and enddate=#{enddate}
+ 		</if>
+ 		<if test="appendix != null and appendix !=''">
+ 			and appendix=#{appendix}
+ 		</if>
+ 		<if test="type != null and type !=''">
+ 			and type=#{type}
+ 		</if>
+ 		<if test="sex != null and sex !=''">
+ 			and sex=#{sex}
+ 		</if>
+ 		<if test="age != null and age !=''">
+ 			and age=#{age}
+ 		</if>
+ 		order by id desc
+ 		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+ </select>
+ 
+ <select id="getCount" resultType="int">
+	   select count(1) from crm_users_certificate where 1=1
+	  <if test="user_id != null and user_id !=''">
+ 			and user_id=#{user_id}
+ 		</if>
+ 		<if test="startdate != null and startdate !=''">
+ 			and startdate=#{startdate}
+ 		</if>
+ 		<if test="enddate != null and enddate !=''">
+ 			and enddate=#{enddate}
+ 		</if>
+ 		<if test="appendix != null and appendix !=''">
+ 			and appendix=#{appendix}
+ 		</if>
+ 		<if test="type != null and type !=''">
+ 			and type=#{type}
+ 		</if>
+ 		<if test="sex != null and sex !=''">
+ 			and sex=#{sex}
+ 		</if>
+ 		<if test="age != null and age !=''">
+ 			and age=#{age}
+ 		</if>
+	</select>
+	
+	<select id="getById" resultMap="CrmUserScertificateResultMap" parameterType="int">
+	   select <include refid="CrmUserScertificateColumn"/> from crm_users_certificate where id = #{id}
+	</select>
+	
+	<!--修改 -->
+	<update id="editById"  parameterMap="CrmUserScertificateparaMap">
+		UPDATE
+		crm_users_certificate
+		<set>
+			<if test="user_id != null and user_id !=''">
+ 				 user_id=#{user_id},
+	 		</if>
+	 		<if test="startdate != null and startdate !=''">
+	 			 startdate=#{startdate},
+	 		</if>
+	 		<if test="enddate != null and enddate !=''">
+	 			 enddate=#{enddate},
+	 		</if>
+	 		<if test="appendix != null and appendix !=''">
+	 			 appendix=#{appendix},
+	 		</if>
+	 		<if test="type != null and type !=''">
+	 			 type=#{type},
+	 		</if>
+	 		<if test="sex != null and sex !=''">
+	 			 sex=#{sex},
+	 		</if>
+	 		<if test="age != null and age !=''">
+	 			 age=#{age}
+	 		</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delById">
+	   delete from crm_users_certificate where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+
+</mapper>

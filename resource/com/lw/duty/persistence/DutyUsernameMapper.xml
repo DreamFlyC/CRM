@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.duty.persistence.DutyUsernameMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="DutyUsername" id="DutyUsernameparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="user" resultMap="name" />
+		<parameter property="groupid" resultMap="groupid" />
+	</parameterMap>
+	<resultMap type="DutyUsername" id="DutyUsernameResultMap">
+		<id property="id" column="id" />
+		<result property="user" column="name" />
+		<result property="groupid" column="groupid" />
+	</resultMap>
+	<sql id="DutyUsernameColumn">id,name,groupid</sql>
+
+	<select id="getList" resultMap="DutyUsernameResultMap" >
+		select * from sys_users where 1=1
+		
+	<if test="ids!=null "> and groupid in( #{ids})</if>
+<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	order by groupid
+	</select>
+	
+	
+	<!--根据id查询  -->
+	<select id="getById" resultMap="DutyUsernameResultMap" parameterType="DutyUsername">
+	select <include refid="DutyUsernameColumn" /> from sys_users where id=#{_parameter}
+	</select>
+	
+	<!--根据usernmae查询  -->
+	<select id="getByName" resultMap="DutyUsernameResultMap" parameterType="DutyUsername">
+	select <include refid="DutyUsernameColumn" /> from sys_users where 1=1
+		<if test="_parameter != null and _parameter != ''">
+			<bind name="pattern" value="'%' + _parameter + '%'" />
+			AND name LIKE #{pattern}
+		</if>
+	</select>
+	
+	<insert id="addUser" keyProperty="id" useGeneratedKeys="true" parameterType="DutyUsername"> 
+	<![CDATA[
+	insert into sys_users (name) values (#{user})
+	]]>
+	</insert>
+
+	<select id="getListByUsersGroupids" resultMap="DutyUsernameResultMap" parameterType="map" >  
+		SELECT <include refid="DutyUsernameColumn"/> FROM sys_users where 1=1 
+		<if test="ids!=null and ids!=''">
+			and groupid in 
+		<foreach item="item" collection="ids" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+			order by groupid ,id 
+	</select>
+	
+	<select id="getUsersGroupList" resultMap="DutyUsernameResultMap" parameterType="map" >  
+		SELECT <include refid="DutyUsernameColumn"/> FROM sys_users where 1=1 
+		<if test="ids!=null and ids!=''">
+			and groupid in (${ids})
+		</if>
+			order by groupid ,id 
+	</select>
+	
+	<select id="getListUsername" resultMap="DutyUsernameResultMap" parameterType="map" >  
+		SELECT <include refid="DutyUsernameColumn"/> FROM sys_users where 1=1 
+		<if test="ids!=null and ids!=''">
+		and id in
+		<foreach item="item" collection="ids" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		order by id 
+	</select>
+	
+	<!--根据usernmae查询  -->
+	<select id="getByUser" resultMap="DutyUsernameResultMap" parameterType="DutyUsername" useCache="false">
+	select <include refid="DutyUsernameColumn" /> from sys_users where 1=1
+		<if test="_parameter != null and _parameter != ''">
+			<bind name="pattern" value="'%' + _parameter + '%'" />
+			AND name LIKE #{pattern}
+		</if>
+	</select>
+	
+</mapper>

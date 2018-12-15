@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//-//mybatis.org//DT//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.complaints.persistence.CrmComplaintsMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="CrmComplaints" id="CrmComplaintsparaMap">
+	    <parameter property="id" resultMap="id"/>
+		<parameter property="title" resultMap="title"/>
+		<parameter property="cid" resultMap="cid"/>
+		<parameter property="number" resultMap="number"/>
+		<parameter property="user" resultMap="user"/>
+		<parameter property="comdate" resultMap="comdate"/>
+		<parameter property="type" resultMap="type"/>
+		<parameter property="date" resultMap="date"/>
+		<parameter property="uid" resultMap="uid"/>	
+		<parameter property="stime" resultMap="stime"/>
+		<parameter property="etime" resultMap="etime"/>
+		<parameter property="num" resultMap="num"/>
+	</parameterMap>
+
+	<resultMap type="CrmComplaints" id="CrmComplaintsResultMap">
+		<id property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="cid" column="cid"/>
+		<result property="number" column="number"/>
+		<result property="user" column="user"/>
+		<result property="comdate" column="comdate"/>
+		<result property="type" column="type"/>
+		<result property="date" column="date"/>
+		<result property="uid" column="uid"/>
+		<result property="stime" column="stime"/>
+		<result property="etime" column="etime"/>
+		<result property="num" column="num"/>
+
+
+	</resultMap>
+
+	<sql id="CrmComplaintsColumn">id,title,cid,number,user,comdate,`type`,date,uid</sql>
+	<insert id="save"  parameterMap="CrmComplaintsparaMap" keyProperty="id" useGeneratedKeys="true">
+	insert into crm_complaints(title,cid,number,user,comdate,`type`,uid,date)
+	values(#{title},#{cid},#{number},#{user},#{comdate},#{type},#{uid},now())
+	</insert>
+	
+	<select id="getList" resultMap="CrmComplaintsResultMap" parameterType="map">
+	select <include refid="CrmComplaintsColumn"/> from crm_complaints where 1=1	
+	<if test="title != null and title != ''">	
+		and title=#{title}	
+	</if>
+	
+	<if test="cid != null and cid != ''">
+		and cid=#{cid}	
+	</if>
+	
+	<if test="number != null and number != ''">
+		and number=#{number}	
+	</if>
+	
+	<if test="user != null and user != ''">
+		and user=#{user}	
+	</if>
+	
+	<if test="comdate != null and comdate != ''">
+		and comdate=#{comdate}	
+	</if>			
+	<if test=" type !=null and type !=''">
+		`type`=#{type}
+	</if>
+	
+	<if test="date !=null and date !=''">
+    <![CDATA[  and DATE_FORMAT(date, '%Y-%m-%d')=  DATE_FORMAT(#{date}, '%Y-%m-%d')   ]]>
+    </if>
+         <!-- 时间 -->
+    <if test="stime !=null and stime !=''">
+    <![CDATA[  and DATE_FORMAT(date, '%Y-%m-%d') >= DATE_FORMAT(#{stime}, '%Y-%m-%d')    ]]>
+    </if>
+    
+    <if test="etime !=null and etime !=''">
+    <![CDATA[  and DATE_FORMAT(date, '%Y-%m-%d') <= DATE_FORMAT(#{etime}, '%Y-%m-%d')    ]]>
+    </if>
+	<if test="uid != null and uid != ''">
+		and uid=#{uid}	
+	</if>
+     <!-- 时间 -->
+    <if test="stime !=null and stime !=''">
+    <![CDATA[  and DATE_FORMAT(date, '%Y-%m-%d') >= DATE_FORMAT(#{stime}, '%Y-%m-%d')    ]]>
+    </if>
+    
+    <if test="etime !=null and etime !=''">
+    <![CDATA[  and DATE_FORMAT(date, '%Y-%m-%d') <= DATE_FORMAT(#{etime}, '%Y-%m-%d')    ]]>
+    </if>
+ 
+	order by id desc 
+	<if test="firstResult!=null and maxResult!=null">
+	limit #{firstResult} , #{maxResult};
+	</if>
+	</select>
+	
+	<select id="getCount" resultType="int">
+	select count(1) from crm_complaints where 1=1
+	<if test="title != null and title != ''">	
+		and title=#{title}	
+	</if>
+	
+	
+	<if test="cid != null and cid != ''">
+		and cid=#{cid}	
+	</if>
+	
+	<if test="number != null and number != ''">
+		and number=#{number}	
+	</if>
+	
+	<if test="user != null and user != ''">
+		and user=#{user}	
+	</if>
+	
+	<if test="comdate != null and comdate != ''">
+		and comdate=#{comdate}	
+	</if>			
+	<if test=" type !=null and type !=''">
+		`type`=#{type}, 
+	</if>
+	
+	<if test="date !=null and date !=''">
+    <![CDATA[  and DATE_FORMAT(date, '%Y-%m-%d')=  DATE_FORMAT(#{date}, '%Y-%m-%d')   ]]>
+    </if>
+    
+	<if test="uid != null and uid != ''">
+		and uid=#{uid}	
+	</if>
+	</select>
+	
+	<select id="getById" resultMap="CrmComplaintsResultMap" parameterType="int" useCache="false">
+	select <include refid="CrmComplaintsColumn"/> from  crm_complaints where id=#{id}
+	</select>
+	<update id="editById" parameterMap="CrmComplaintsparaMap">
+	update crm_complaints 
+	<set>
+	<if test="title !=null and title !=''">
+		 title=#{title}, 
+	</if>
+	<if test="cid !=null and cid !=''">
+		 cid=#{cid}, 
+	</if>
+	<if test="number !=null and number !=''">
+		 number=#{number}, 
+	</if>
+	<if test="user !=null and user !=''">
+		 user=#{user}, 
+	</if>
+	
+	<if test="comdate !=null and comdate !=''">
+		comdate=#{comdate}, 
+	</if>
+	<if test=" type !=null and type !=''">
+		`type`=#{type}, 
+	</if>	   
+	<if test=" uid !=null and uid !=''">
+		 uid=#{uid}
+	</if>
+	</set>
+	where id=#{id}
+	</update>
+				
+		<!--删除-->
+	<delete id="delById">
+	   delete from  crm_complaints where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>	
+	
+	<select id="getDateAndTypeList" resultMap="CrmComplaintsResultMap" parameterType="map">
+		  SELECT count(1) as num,type,DATE_FORMAT(date,'%Y-%m-%d')as date
+		  from crm_complaints where 1=1
+			  <if test="status!=null and status==0">
+				  /* 默认查询*/
+				  <if test="sDate !=null and sDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m') >=
+			  		 	#{sDate}  ]]>
+				  </if>
+				  <if test="eDate !=null and eDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m') <=
+					 #{eDate}  ]]>
+				  </if>
+			  </if>
+			  <if test="status!=null and status==1">
+				  /* 按天查询*/
+				  <if test="sDate !=null and sDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d') >=
+			  		 	#{sDate}  ]]>
+				  </if>
+				  <if test="eDate !=null and eDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d') <=
+					 #{eDate}  ]]>
+				  </if>
+			  </if>
+			  <if test="status!=null and status==2">
+				  /* 按月查询*/
+				  <if test="sDate !=null and sDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m') >=
+			  		 	#{sDate}  ]]>
+				  </if>
+				  <if test="eDate !=null and eDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m') <=
+					 #{eDate}  ]]>
+				  </if>
+			  </if>
+			  <if test="status!=null and status==3">
+				  /* 按年查询*/
+				  <if test="sDate !=null and sDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y') >=
+			  		  #{sDate}  ]]>
+				  </if>
+				  <if test="eDate !=null and eDate != ''">
+					  <![CDATA[ and DATE_FORMAT(date, '%Y') <=
+					  #{eDate}  ]]>
+				  </if>
+			  </if>
+		  group by type ,
+			<if test="status!=null and status==0">
+				DATE_FORMAT(date,'%Y-%m')
+			</if>
+			<if test="status!=null and status==1">
+				DATE_FORMAT(date,'%Y-%m')
+			</if>
+			<if test="status!=null and status==2">
+				DATE_FORMAT(date,'%Y-%m')
+			</if>
+			<if test="status!=null and status==3">
+				DATE_FORMAT(date,'%Y')
+			</if>
+		  order by date asc,type asc
+	</select>
+	<select id="getTypeCount" resultType="int">
+		select count (1) from crm_complaints group by type
+	</select>
+
+
+</mapper>

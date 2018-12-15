@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmcompany.persistence.CrmCompanyMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmCompany" id="CrmCompanyparaMap">
+<parameter property="id" resultMap="id" />
+<parameter property="number" resultMap="number" />
+<parameter property="title" resultMap="title" />
+<parameter property="user" resultMap="user" />
+<parameter property="bid" resultMap="bid" />
+<parameter property="date" resultMap="date" />
+<parameter property="uid" resultMap="uid" />
+</parameterMap>
+
+<resultMap type="CrmCompany" id="CrmCompanyResultMap">
+   <id property="id" column="id" />
+   <result property="number" column="number" /> 
+   <result property="title" column="title" /> 
+   <result property="user" column="user" /> 
+   <result property="bid" column="bid" /> 
+   <result property="date" column="date" /> 
+   <result property="uid" column="uid" /> 
+ </resultMap>
+<sql id="CrmCompanyColumn">id,number,title,user,bid,date,uid</sql>
+
+<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="CrmCompany"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into crm_company (number,title,user,bid,date,uid) values (#{number},#{title},#{user},#{bid},now(),#{uid});
+    	]]>
+		
+	</insert>
+ <select id="getList" parameterType="CrmCompany" resultMap="CrmCompanyResultMap">
+ 		select * from crm_company
+ </select>
+ 
+ <select id="getCount" resultType="int">
+	   select count(1) from crm_company
+	</select>
+	
+	<select id="getById" resultMap="CrmCompanyResultMap" parameterType="int">
+	   select <include refid="CrmCompanyColumn"/> from crm_company where id = #{id}
+	</select>
+	
+	<!--修改 -->
+	<update id="editById"  parameterMap="CrmCompanyparaMap">
+		UPDATE
+		crm_company
+		<set>
+			<if test="number != null and number != ''">
+				number = #{number},
+			</if>
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="user != null and user != ''">
+				user = #{user},
+			</if>
+			<if test="bid != null and bid != ''">
+				bid = #{bid},
+			</if>
+			<if test="uid != null and uid != ''">
+				uid = #{uid},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delById">
+	   delete from crm_company where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmpurchacse.persistence.CrmPurchacseMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmPurchacse" id="CrmPurchacseMap">
+<parameter property="id" resultMap="id" />
+<parameter property="number" resultMap="number" />
+<parameter property="title" resultMap="title" />
+<parameter property="date" resultMap="date" />
+<parameter property="uid" resultMap="uid" />
+<parameter property="price" resultMap="price" />
+<parameter property="note" resultMap="note" />
+<parameter property="ids" resultMap="ids" />
+<parameter property="address" resultMap="address" />
+<parameter property="is_approval" resultMap="is_approval" />
+</parameterMap>
+
+<resultMap type="CrmPurchacse" id="CrmPurchacseResultMap">
+	<id property="id" column="id" />
+	<result property="number" column="number" />
+	<result property="title" column="title" />
+	<result property="date" column="date" />
+	<result property="uid" column="uid" />
+	<result property="price" column="price" />
+	<result property="note" column="note" />
+	<result property="ids" column="ids" />
+	<result property="address" column="address"/>
+	<result property="is_approval" column="is_approval" />
+	<association property="crmUser" fetchType="lazy" column="uid" select="com.lw.crm.crmuser.persistence.CrmUserMapper.getById"></association>
+	<association property="crmSupplier" fetchType="lazy" column="sid" select="com.lw.crm.crmsupplier.persistence.CrmSupplierMapper.getById"></association>
+</resultMap>
+
+	<sql id="CrmPurchacseColumn">
+		id,number,title,date,uid,price,note,type,address,is_approval
+	</sql>
+
+<!--查询信息总条数 -->
+	<select id="getCount" resultType="int" parameterType="String">
+		select count(1) from crm_purchacse
+		<where>
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+		</where>
+	</select>
+	
+	<!--根据产品编号,日期,查询  -->
+	<select id="getAll" resultMap="CrmPurchacseResultMap" parameterType="CrmPurchacse">
+	    select
+		<include refid="CrmPurchacseColumn" />
+		from crm_purchacse  
+		<where>
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+			<if test="type != null and type !=0 ">
+				AND type = #{type}
+			</if>
+		</where>
+		 order by id desc limit #{currentpage},#{pagesize} 
+	</select>
+
+
+	<insert id="save" parameterType="CrmPurchacse" keyColumn="id" useGeneratedKeys="true">
+		insert into crm_purchacse
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="number != null and number != ''">
+				number,
+			</if>
+			<if test="price != null and price != ''">
+				price,
+			</if>
+			<if test="note != null and note != ''">
+				note,
+			</if>
+			<if test="uid != null and uid != ''">
+				uid,
+			</if>
+			<if test="title != null and title != ''">
+				title,
+			</if>
+			<if test="address != null and address != ''">
+				address,
+			</if>
+			<if test="is_approval != null and is_approval != ''">
+				is_approval,
+			</if>
+			date
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+		<if test="number != null and number != ''">
+			#{number},
+		</if>
+		<if test="price != null and price != ''">
+			#{price},
+		</if>
+		<if test="note != null and note != ''">
+			#{note},
+		</if>
+		<if test="uid != null and uid != ''">
+			#{uid},
+		</if>
+		<if test="title != null and title != ''">
+			#{title},
+		</if>
+		<if test="address != null and address != ''">
+			#{address},
+		</if>
+		<if test="is_approval != null and is_approval != ''">
+			#{is_approval},
+		</if>
+		now()
+	</trim>
+	</insert>
+	
+	<!--获取记录列表  -->
+	<select id="getList" parameterType="map" resultMap="CrmPurchacseResultMap">
+	select
+		<include refid="CrmPurchacseColumn" />
+		from crm_purchacse
+		<where>
+			<if test="id!=null">and id=#{id}</if>
+		</where>
+		order by date desc
+		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+	
+	<!--根据id查询  -->
+	<select id="getById" resultMap="CrmPurchacseResultMap"
+		parameterType="CrmPurchacse">
+	    select
+		<include refid="CrmPurchacseColumn" />
+		from crm_purchacse 
+		 where id=#{_parameter} 
+	</select>
+	
+	<!--批量删除  -->
+	<delete id="delete" parameterType="int">
+		delete from crm_purchacse where id in
+		<foreach item="crm_purchacseItem" collection="array" open="("
+			separator="," close=")">
+			#{crm_purchacseItem}
+		</foreach>
+	</delete>
+	
+	<!--修改 -->
+	<update id="editById" parameterType="CrmPurchacse">
+		UPDATE crm_purchacse
+		<set>
+			<if test="number != null">
+				number = #{number},
+			</if>
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="uid != null">
+				uid = #{uid},
+			</if>
+			<if test="price != null">
+				price = #{price},
+			</if>
+			<if test="note != null">
+				note = #{note},
+			</if>
+			<if test="address != null">
+				address = #{address}
+			</if>
+			<if test="is_approval != is_approval">
+				is_approval = #{is_approval}
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+</mapper>

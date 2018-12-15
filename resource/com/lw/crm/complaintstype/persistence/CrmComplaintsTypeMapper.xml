@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//-//mybatis.org//DT//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.complaintstype.persistence.CrmComplaintsTypeMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="CrmComplaintsType" id="CrmComplaintsTypeparaMap">
+	    <parameter property="id" resultMap="id"/>
+		<parameter property="name" resultMap="name"/>
+		<parameter property="adddatetime" resultMap="add_datetime"/>
+		<parameter property="uid" resultMap="uid"/>
+		<parameter property="remark" resultMap="remark"/>
+		<parameter property="seq" resultMap="seq"/>	
+		<parameter property="seq" resultMap="seq"/>	
+		<parameter property="type" resultMap="type"/>		
+	</parameterMap>
+	
+	<resultMap type="CrmComplaintsType" id="CrmComplaintsTypeResultMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="adddatetime" column="add_datetime"/>
+		<result property="uid" column="uid"/>
+		<result property="remark" column="remark"/>
+		<result property="seq" column="seq"/>
+		<result property="type" column="type"/>
+		
+	</resultMap>
+	<sql id="CrmComplaintsTypeColumn">id,name,add_datetime,uid,remark,seq,type</sql>
+	<insert id="save"  parameterMap="CrmComplaintsTypeparaMap" keyProperty="id" useGeneratedKeys="true">
+	insert into crm_complaints_type(name,add_datetime,uid,remark,seq)
+	values(#{name},now(),#{uid},#{remark},#{seq})
+	</insert>
+	
+	<select id="getList" resultMap="CrmComplaintsTypeResultMap" parameterType="map">
+	select <include refid="CrmComplaintsTypeColumn"/> from crm_complaints_type where 1=1	
+	<if test="name != null and name != ''">	
+		and name=#{name}	
+	</if>
+	<!--<if test="date !=null and date !=''">
+    <![CDATA[  and DATE_FORMAT(date, '%Y-%m-%d')=  DATE_FORMAT(#{date}, '%Y-%m-%d')   ]]>
+    </if>-->
+	<if test="uid != null and uid != ''">
+		and uid=#{uid}	
+	</if>
+	<if test="remark != null and remark != ''">
+		and remark=#{remark}	
+	</if>
+	<if test="seq != null and seq != ''">
+		and seq=#{seq}	
+	</if>
+	order by type asc ,id desc
+	<if test="firstResult!=null and maxResult!=null">
+	limit #{firstResult} , #{maxResult};
+	</if>
+	</select>
+	<select id="getCount" resultType="int">
+	select count(1) from crm_complaints_type where 1=1
+	
+	<if test="name != null and name != ''">	
+		and name=#{name}	
+	</if>
+	<if test="uid != null and uid != ''">
+		and uid=#{uid}	
+	</if>
+	<if test="remark != null and remark != ''">
+		and remark=#{remark}	
+	</if>
+	<if test="seq != null and seq != ''">
+		and seq=#{seq}	
+	</if>
+	</select>
+	
+	<select id="getById" resultMap="CrmComplaintsTypeResultMap" parameterType="int" useCache="false">
+	select <include refid="CrmComplaintsTypeColumn"/> from  crm_complaints_type where id=#{id}
+	</select>
+	<update id="editById" parameterMap="CrmComplaintsTypeparaMap">
+	update crm_complaints_type 
+	<set>
+	<if test="name !=null and name !=''">
+		 name=#{name}, 
+	</if>
+	<if test="uid !=null and uid !=''">
+		 uid=#{uid}, 
+	</if>
+	<if test="remark !=null and remark !=''">
+		 remark=#{remark}, 
+	</if>
+	<if test="seq !=null and seq !=''">
+		 seq=#{seq}, 
+	</if>
+	</set>
+	where id=#{id}
+	</update>			
+		<!--删除-->
+	<delete id="delById">
+	   delete from  crm_complaints_type where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>	
+	
+	<!--根据type查询name  -->
+	<select id="getNameByType" resultMap="CrmComplaintsTypeResultMap" useCache="false">
+		select name from crm_complaints_type where type in 
+		  <foreach collection="array" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</select>
+</mapper>

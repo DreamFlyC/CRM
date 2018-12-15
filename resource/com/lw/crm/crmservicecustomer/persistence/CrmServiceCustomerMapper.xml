@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.lw.crm.crmservicecustomer.persistence.CrmServiceCustomerMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="CrmServiceCustomer"
+		id="CrmServiceCustomerparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="title" resultMap="title" />
+		<parameter property="cid" resultMap="cid" />
+		<parameter property="type" resultMap="type" />
+		<parameter property="uid" resultMap="uid" />
+		<parameter property="follow_uid" resultMap="follow_uid" />
+		<parameter property="follow_purpose"
+			resultMap="follow_purpose" />
+		<parameter property="follow_datetime"
+			resultMap="follow_datetime" />
+		<parameter property="specified_datetiime"
+			resultMap="specified_datetiime" />
+		<parameter property="follow_result"
+			resultMap="follow_result" />
+		<parameter property="add_datetime" resultMap="add_datetime" />
+	</parameterMap>
+
+	<resultMap type="CrmServiceCustomer"
+		id="CrmServiceCustomerResultMap">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="cid" column="cid" />
+		<result property="type" column="type" />
+		<result property="uid" column="uid" />
+		<result property="follow_uid" column="follow_uid" />
+		<result property="follow_purpose" column="follow_purpose" />
+		<result property="follow_datetime" column="follow_datetime" />
+		<result property="specified_datetiime" column="specified_datetiime" />
+		<result property="follow_result" column="follow_result" />
+		<result property="add_datetime" column="add_datetime" />
+	</resultMap>
+	<sql id="CrmServiceCustomerColumn">id,title,cid,type,uid,follow_uid,follow_purpose,follow_datetime,specified_datetiime,follow_result,add_datetime
+	</sql>
+
+	<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="CrmServiceCustomer"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into crm_service_customers (title,cid,type,uid,follow_uid,follow_purpose,follow_datetime,specified_datetiime,follow_result,add_datetime)
+    		 values 
+    		 (#{title},#{cid},#{type},#{uid},#{follow_uid},#{follow_purpose},#{follow_datetime},#{specified_datetiime},#{follow_result},now());
+    	]]>
+
+	</insert>
+	<select id="getList" parameterType="CrmServiceCustomer"
+		resultMap="CrmServiceCustomerResultMap">
+		select * from crm_service_customers
+	</select>
+
+	<select id="getCount" resultType="int">
+		select count(1) from crm_service_customers
+	</select>
+
+	<select id="getById" resultMap="CrmServiceCustomerResultMap"
+		parameterType="int">
+		select
+		<include refid="CrmServiceCustomerColumn" />
+		from crm_service_customers where id = #{id}
+	</select>
+
+	<!--修改 -->
+	<update id="editById" parameterMap="CrmServiceCustomerparaMap">
+		UPDATE
+		crm_service_customers
+		<set>
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="cid != null and cid != ''">
+				cid = #{cid},
+			</if>
+			<if test="type != null and type != ''">
+				type = #{type},
+			</if>
+			<if test="uid != null and uid != ''">
+				uid = #{uid},
+			</if>
+			<if test="follow_uid != null and follow_uid != ''">
+				follow_uid = #{follow_uid},
+			</if>
+			<if test="follow_purpose != null and follow_purpose != ''">
+				follow_purpose = #{follow_purpose},
+			</if>
+			<if test="follow_datetime != null and follow_datetime != ''">
+				follow_datetime = #{follow_datetime},
+			</if>
+			<if
+				test="specified_datetiime != null and specified_datetiime != ''">
+				specified_datetiime = #{specified_datetiime},
+			</if>
+			<if test="follow_result != null and follow_result != ''">
+				follow_result = #{follow_result},
+			</if>
+
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delById">
+		delete from crm_service_customers where id in
+		<foreach collection="ids" index="index" item="item" open="("
+			close=")" separator=",">#{item}</foreach>
+	</delete>
+</mapper>

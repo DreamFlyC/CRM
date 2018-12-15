@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.duty.persistence.DutyGroupMapper">
+	<parameterMap type="DutyGroup" id="DutyGroupparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="dutyid" resultMap="dutyid" />
+		<parameter property="groupid" resultMap="groupid" />
+	</parameterMap>
+	
+	<resultMap type="DutyGroup" id="DutyGroupResultMap">
+		<id property="id" column="id" />
+		<result property="dutyid" column="dutyid" />
+		<result property="groupid" column="groupid" />
+	</resultMap>
+	
+	<sql id="DutyGroupColumn">id,dutyid,groupid</sql>
+	
+	
+</mapper>

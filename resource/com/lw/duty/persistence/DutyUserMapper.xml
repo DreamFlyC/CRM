@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.duty.persistence.DutyUserMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"  />
+	<parameterMap type="DutyUser" id="DutyUserparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="dutyid" resultMap="dutyid" />
+		<parameter property="userid" resultMap="userid" />
+		<parameter property="startdate" resultMap="startdate" />
+		<parameter property="enddate" resultMap="enddate" />
+		<parameter property="begintime" resultMap="begintime" />
+		<parameter property="stoptime" resultMap="stoptime" />
+		<parameter property="content" resultMap="content" />
+		<parameter property="appendix" resultMap="appendix" />
+		<parameter property="note" resultMap="note" />
+		<parameter property="dkey" resultMap="dkey" />
+		<parameter property="lastTime" resultMap="lastTime" />
+	</parameterMap>
+	
+	<resultMap type="DutyUser" id="DutyUserResultMap">
+		<id property="id" column="id" />
+		<result property="dutyid" column="dutyid" />
+		<result property="userid" column="userid" />
+		<result property="startdate" column="startdate" />
+		<result property="enddate" column="enddate" />
+		<result property="begintime" column="begintime" />
+		<result property="stoptime" column="stoptime" />
+		<result property="content" column="content" />
+		<result property="appendix" column="appendix" />
+		<result property="note" column="note" />
+		<result property="dkey" column="dkey" />
+		<result property="lastTime"  column="lastTime" />
+	    <association property="dutyLog" fetchType="eager"  column="{dutyid=dutyid,uid=userid}" select="com.lw.duty.persistence.DutyLogMapper.getById" />
+		<association property="dutyUsername" fetchType="lazy" column="userid" select="com.lw.duty.persistence.DutyUsernameMapper.getById" />
+		<association property="duty" fetchType="lazy" column="dutyid" select="com.lw.duty.persistence.DutyMapper.getById" />
+		<collection property="dutyLogList" fetchType="lazy" javaType="java.util.ArrayList"
+		column="{dutyid=dutyid,uid=userid}" select="com.lw.duty.persistence.DutyLogMapper.getList"></collection>
+	</resultMap>
+	
+	<sql id="DutyUserColumn">id,dutyid,userid,startdate,enddate,content,appendix,note,dkey,begintime,stoptime
+	</sql>
+
+
+	<!--获取总数  -->	
+	<select id="getCount" resultType="int" parameterType="String">
+		select count(1) from toa_duty_user where 1=1
+		<if test="dutyid != null and dutyid !=''">
+			and dutyid=#{dutyid}
+		</if>
+	</select>
+	
+		
+<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="DutyUser"
+		keyProperty="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert IGNORE into toa_duty_user(dutyid,userid,startdate,enddate,content,dkey) 
+    		values(#{dutyid},#{userid},#{startdate},#{enddate},#{content},#{dkey});
+    	]]>
+	</insert>
+	
+<!--修改 -->
+	<select id="getDutyUserById" resultMap="DutyUserResultMap"
+		parameterType="DutyUser">
+		select
+		<include refid="DutyUserColumn" />
+		from toa_duty_user where dutyid=#{dutyid}
+	</select>
+	
+	<update id="editById" parameterType="DutyUser">
+		UPDATE
+		toa_duty_user
+		<set>
+			<if test="startdate != null and startdate!=''">
+				startdate = #{startdate},
+			</if>
+			<if test="enddate != null and enddate!=''">
+				enddate = #{enddate},
+			</if>
+			<if test="content != null and content!=''">
+				content = #{content},
+			</if>
+			<if test="appendix != null and appendix!=''">
+				appendix = #{appendix},
+			</if>
+			<if test="note != null and note!=''">
+				note = #{note},
+			</if>
+			<if test="dkey != null and dkey!=''">
+				dkey = #{dkey},
+			</if>
+			<if test="begintime != null and begintime!=''">
+				begintime = #{begintime},
+			</if>
+			<if test="stoptime != null and stoptime!=''">
+				stoptime = #{stoptime}
+			</if>
+		</set>
+		WHERE userid=#{userid} and dutyid = #{dutyid}
+	</update>
+	<!--根据dutyid查询  -->
+	<!--根据dutyid查询  -->
+	<select id="getList" resultMap="DutyUserResultMap" parameterType="DutyUser" useCache="false">
+		select * from toa_duty_user where dutyid=#{dutyid}
+	</select>
+	
+	<!--17.管理员查询 我的工单(dkey!=3)、信息提醒(dkey=3)等   工单时间从duty表-->
+	<select id="getListAll" resultMap="DutyUserResultMap" parameterType="DutyUser" useCache="false">
+	select t1.* from toa_duty_user t1,toa_duty t2
+	<where>
+		t1.dutyid=t2.id
+		<if test="dkey!=null and dkey!=''">
+			and t1.dkey!=#{dkey} 
+		</if>
+		<if test="ndkey!=null and ndkey!=''">
+			and t1.dkey=#{ndkey} 
+		</if>
+		<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+		</if>
+		<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+		</if>
+	</where>
+	order by id desc
+	</select>
+	
+	<!--17.管理员查询 我的工单(dkey!=3)、信息提醒(dkey=3)等   工单时间从duty表-->
+	<select id="getListAllTwo" resultMap="DutyUserResultMap" parameterType="DutyUser" useCache="false">
+	select t1.* ,(select date from  toa_duty_log where
+	dutyid=t2.id and uid=t1.userid order by id desc limit 1
+	) as lastTime from toa_duty_user t1,toa_duty t2
+	<where>
+		t1.dutyid=t2.id
+		<if test="dkey!=null and dkey!=''">
+			and t1.dkey!=#{dkey} 
+		</if>
+		<if test="ndkey!=null and ndkey!=''">
+			and t1.dkey=#{ndkey} 
+		</if>
+		<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+		</if>
+		<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+		</if>
+	</where>
+	order by id desc
+	</select>
+	
+
+	<!--根据id查询   查出来是个list-->
+	<select id="getById" resultMap="DutyUserResultMap" parameterType="DutyUser">
+	select <include refid="DutyUserColumn" /> from toa_duty_user where dutyid=#{_parameter}
+	</select>
+	
+	<!--根据userid查询进行中和已完成的，查出来是个lsit  -->
+	<select id="getListByUid" parameterType="int" resultMap="DutyUserResultMap" useCache="false">
+	select t1.* from toa_duty_user t1,toa_duty t2 
+	where t1.dutyid=t2.id 
+		<if test="userid!=null and userid!=''">
+			and t1.userid=#{userid} 
+		</if>
+		<if test="dkey!=null and dkey!=''">
+			and t1.dkey!=#{dkey} 
+		</if>
+		<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+		</if>
+		<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+		</if>
+		order by t2.level desc ,t1.dkey 
+	</select>
+	
+	<!--查询dkey等于3的，也就是未接受的任务列表  -->
+	<select id="getListByDkey"  resultMap="DutyUserResultMap" useCache="false">
+	select t1.* from toa_duty_user t1,toa_duty t2 
+	where t1.dutyid=t2.id  and t1.dkey=3 
+	<if test="userid!=null and userid!=''">
+			and t1.userid=#{userid} 
+		</if>
+	<if test="stime!=null and stime != ''"> 
+		<![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') >=
+		 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+	</if>
+	<if test="etime!=null and stime != ''">
+		 <![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') <= 
+		 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+	 </if>
+	order by t2.id desc
+	</select>
+	
+	<select id="getByUserId" resultMap="DutyUserResultMap" parameterType="DutyUser">
+	select <include refid="DutyUserColumn" />  from toa_duty_user where userid=#{userid} and dutyid=#{dutyid}
+	</select>
+
+	<select id="getDuty" resultMap="DutyUserResultMap" parameterType="int">
+	    select
+		<include refid="DutyUserColumn" />
+		from toa_duty_user where dutyid=#{id}
+		
+		</select>
+		
+<!--修改dkey  -->
+<!-- 根据dkey修改任务状态  -->
+	<update id="editDkey">
+	update toa_duty_user
+	<set>
+	dkey=3
+	</set>
+	WHERE dutyid=#{id}
+	</update>
+	
+	<!--删除  -->
+	<delete id="delById">
+	   delete from toa_duty_user where dutyid in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+	
+	<!--删除  -->
+	<delete id="delByUserid">
+	   delete from toa_duty_user where userid =#{userid}
+	</delete>
+	
+		
+<select id="getCountAll" resultType="int" parameterType="String" useCache="false">
+		select count(1) from toa_duty_user 
+		<where>
+			1=1 
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+			<if test="title != null and title != ''">
+				<bind name="pattern" value="'%' + title + '%'" />
+				AND title LIKE #{pattern}
+			</if>
+			<if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(startdate, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and sdate != ''">
+			 <![CDATA[ and DATE_FORMAT(enddate, '%Y-%m-%d ') <= 
+				 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if>
+			<if test="dkey!=null and dkey!='' and dkey!=0">
+				AND dkey=#{dkey}
+			</if>
+			<if test="begintime!=null and begintime!=''">
+	 	 		<![CDATA[ and DATE_FORMAT(begintime, '%Y-%m-%d ') =
+				 DATE_FORMAT(#{begintime} , '%Y-%m-%d') ]]>
+	 	 	</if>
+	 	 	<if test="ndkey!=null and ndkey!=''">
+				AND dkey!=#{ndkey}
+			</if>
+			<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <= 
+				 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+			</if>
+			
+			<if test="date!=null and date != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') = 
+				 DATE_FORMAT(#{date} , '%Y-%m-%d ') ]]>
+			</if>
+		</where>
+ 	</select>
+ 	
+ 	<delete id="delByDutyid" parameterType="int">
+	delete from toa_duty_user where dutyid =#{dutyid}
+	</delete>
+	
+	<!--根据dutyid查询数据  -->
+	<select id="getByDutyid" parameterType="int" resultType="int">
+		select count(1) from toa_duty_user where dutyid =#{dutyid}
+	</select>
+</mapper>

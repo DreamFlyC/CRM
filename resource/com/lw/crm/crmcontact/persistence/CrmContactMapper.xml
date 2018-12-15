@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmcontact.persistence.CrmContactMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmContact" id="CrmContactparaMap">
+<parameter property="id" resultMap="id" />
+<parameter property="name" resultMap="name" />
+<parameter property="cid" resultMap="cid" />
+<parameter property="type" resultMap="type" />
+<parameter property="date" resultMap="date" />
+<parameter property="uid" resultMap="uid" />
+<parameter property="type1" resultMap="type1" />
+<parameter property="gender" resultMap="gender" />
+<parameter property="tel" resultMap="tel" />
+<parameter property="qq" resultMap="qq" />
+<parameter property="wechat" resultMap="wechat" />
+<parameter property="address" resultMap="address" />
+<parameter property="mail" resultMap="mail" />
+</parameterMap>
+
+<resultMap type="CrmContact" id="CrmContactResultMap">
+   <id property="id" column="id" />
+   <result property="name" column="name" /> 
+   <result property="cid" column="cid" /> 
+   <result property="type" column="type" /> 
+   <result property="date" column="date" /> 
+   <result property="uid" column="uid" /> 
+   <result property="type1" column="type1" /> 
+   <result property="gender" column="gender" /> 
+   <result property="tel" column="tel" /> 
+   <result property="qq" column="qq" /> 
+   <result property="wechat" column="wechat" /> 
+   <result property="address" column="address" /> 
+   <result property="mail" column="mail" /> 
+ </resultMap>
+<sql id="CrmContactColumn">id,name,cid,type,date,uid,type1,gender,tel,qq,wechat,address,mail</sql>
+
+<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="CrmContact"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into crm_contact (name,cid,type,date,uid,type1,gender,tel,qq,wechat,address,mail) 
+    		values 
+    		(#{name},#{cid},#{type},now(),#{uid},#{type1},#{gender},#{tel},#{qq},#{wechat},#{address},#{mail});
+    	]]>
+		
+	</insert>
+ <select id="getList" parameterType="CrmContact" resultMap="CrmContactResultMap">
+ 		select * from crm_contact
+ </select>
+ 
+ <select id="getCount" resultType="int">
+	   select count(1) from crm_contact
+	</select>
+	
+	<select id="getById" resultMap="CrmContactResultMap" parameterType="int">
+	   select <include refid="CrmContactColumn"/> from crm_contact where id = #{id}
+	</select>
+	
+	<!--修改 -->
+	<update id="editById"  parameterMap="CrmContactparaMap">
+		UPDATE
+		crm_contact
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="cid != null and cid != ''">
+				cid = #{cid},
+			</if>
+			<if test="type != null and type != ''">
+				type = #{type},
+			</if>
+			<if test="uid != null and uid != ''">
+				uid = #{uid},
+			</if>
+			<if test="type1 != null and type1 != ''">
+				type1 = #{type1},
+			</if>
+			<if test="gender != null and gender != ''">
+				gender = #{gender},
+			</if>
+			<if test="tel != null and tel != ''">
+				tel = #{tel},
+			</if>
+			<if test="qq != null and qq != ''">
+				qq = #{qq},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="mail != null and mail != ''">
+				mail = #{mail},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delById">
+	   delete from crm_contact where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+</mapper>

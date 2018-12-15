@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.duty.persistence.DutyLogMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="DutyLog" id="DutyLogparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="dutyid" resultMap="dutyid" />
+		<parameter property="content" resultMap="content" />
+		<parameter property="progress" resultMap="progress" />
+		<parameter property="appendix" resultMap="appendix" />
+		<parameter property="note" resultMap="note" />
+		<parameter property="date" resultMap="date" />
+		<parameter property="uid" resultMap="uid" />
+		<parameter property="duid" resultMap="duid" />
+ 	</parameterMap>
+	<resultMap type="DutyLog" id="DutyLogResultMap">
+		<id property="id" column="id" />
+		<result property="dutyid" column="dutyid" />
+		<result property="content" column="content" />
+		<result property="progress" column="progress" />
+		<result property="appendix" column="appendix" />
+		<result property="note" column="note" />
+		<result property="date" column="date" />
+		<result property="uid" column="uid" />
+		<result property="duid" column="duid" />
+ 		<association property="duty" fetchType="lazy" column="dutyid" select="com.lw.duty.persistence.DutyMapper.getById" />  	
+ 		</resultMap>
+
+	<sql id="DutyLogColumn">id,dutyid,content,progress,appendix,note,date,uid,duid
+	</sql>
+
+<!--根据id查询 progress的总和 -->
+	<select id="getById" resultMap="DutyLogResultMap" parameterType="DutyLog" useCache="false">
+	select sum(progress) as progress from toa_duty_log where 1=1
+	<if test="dutyid!=null and dutyid!=''">
+		and dutyid=#{dutyid} 
+	</if>
+	<if test="uid!=null and uid!=''">
+		and uid=#{uid}
+	</if>
+	</select>
+	
+	<!--根据id查询 progress的总和 -->
+	<select id="getByIdForDuty" resultMap="DutyLogResultMap" parameterType="DutyLog">
+	select sum(progress) as progress from toa_duty_log where dutyid=#{_parameter}
+	</select>
+	
+	<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="DutyLog"
+		keyProperty="id" useGeneratedKeys="true">
+	<![CDATA[
+    		insert into toa_duty_log(dutyid,content,progress,appendix,note,uid,duid) 
+    		values(#{dutyid},#{content},#{progress},#{appendix},#{note},#{uid},#{dutyid});
+    	]]>
+	</insert>
+	<select id="getAll" parameterType="Integer"
+		resultMap="DutyLogResultMap">
+		select
+		<include refid="DutyLogColumn" />
+		from toa_duty_log 
+		<where>
+			1 = 1
+		<if test="_parameter != null and _parameter != ''">
+				AND dutyid = #{_parameter}
+			</if>
+		</where>
+	</select>
+	
+<!--根据dutyid查询所有的记录  
+     <select id="getList" parameterType="DutyLog"
+		resultMap="DutyLogResultMap">
+		select
+		<include refid="DutyLogColumn" />
+		from toa_duty_log  where  dutyid=#{dutyid} and uid=#{uid} 
+			and progress is not null
+		order by date desc
+	</select>-->
+	
+	<!--根据dutyid查询所有的记录  -->
+     <select id="getList" parameterType="map" resultMap="DutyLogResultMap">
+		select
+		<include refid="DutyLogColumn" />
+		from toa_duty_log  where 1=1
+	<if test="dutyid!=null and dutyid!=''">
+		and dutyid=#{dutyid} 
+	</if>
+	<if test="uid!=null and uid!=''">
+		and uid=#{uid}
+	</if>
+		order by date desc
+	</select>
+	
+	
+	<!--查询log表所有的appendix  -->
+	<select id="getAppendix" parameterType="DutyLog" resultMap="DutyLogResultMap">
+		select <include refid="DutyLogColumn" />
+		from toa_duty_log  where  dutyid=#{dutyid} and uid=#{uid}
+	</select>
+	
+	<!--根据uid查询最后一条记录  -->
+	<select id="getLast" parameterType="int" resultMap="DutyLogResultMap" useCache="false">
+		select <include refid="DutyLogColumn" />
+		from toa_duty_log WHERE uid=#{uid} 
+		<if test="dutyid != null and dutyid != ''">
+			dutyid=#{dutyid}
+		</if>
+		 group by uid order by id desc limit 1 ;
+	</select>
+</mapper>

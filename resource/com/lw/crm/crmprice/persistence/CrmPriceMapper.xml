@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//-//mybatis.org//DT//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmprice.persistence.CrmPriceMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="CrmPrice" id="CrmPriceparaMap">
+	    <parameter property="id" resultMap="id"/>
+		<parameter property="number" resultMap="number"/>
+		<parameter property="cid" resultMap="cid"/>
+		<parameter property="user" resultMap="user"/>
+		<parameter property="price" resultMap="price"/>
+		<parameter property="title" resultMap="title"/>
+		<parameter property="type" resultMap="type"/>
+		<parameter property="viewid" resultMap="viewid"/>
+		<parameter property="cname" resultMap="cname"/>
+		<parameter property="date" resultMap="date"/>
+		<parameter property="uid" resultMap="uid"/>
+	</parameterMap>
+		<resultMap type="CrmPrice" id="CrmPriceResultMap">
+		<id property="id" column="id"/>
+		<result property="number" column="number"/>
+		<result property="cid" column="cid"/>
+		<result property="user" column="user"/>
+		<result property="price" column="price"/>
+		<result property="title" column="title"/>
+		<result property="type" column="type"/>
+		<result property="viewid" column="viewid"/>
+		<result property="cname" column="cname"/>
+		<result property="date" column="date"/>
+	    <result property="uid" column="uid"/>
+	</resultMap>
+	
+	<sql id="CrmPriceColumn">id,number,cid,user,price,title,type,viewid,cname,date,uid</sql>
+	<insert id="save"  parameterMap="CrmPriceparaMap" keyProperty="id" useGeneratedKeys="true">
+	insert into crm_price(number,cid,user,price,title,type,viewid,cname,date,uid) 
+	values(#{number},#{cid},#{user},#{price},#{title},#{type},#{viewid},#{cname},now(),#{uid})
+	</insert>
+	
+	<select id="getList" resultMap="CrmPriceResultMap" parameterType="int">
+	select <include refid="CrmPriceColumn"/> from crm_price where 1=1
+	<if test="id=null">and id=#{id}</if>
+	<if test="state!=null">and state=#{state}</if>
+	order by id desc 
+	<if test="firstResult!=null and maxResult!=null">
+	limit #{firstResult} , #{maxResult};
+	</if>
+	
+	</select>
+	<select id="getCount" resultType="int">
+	select count(1) from crm_price
+	</select>
+	<select id="getById" resultMap="CrmPriceResultMap" parameterType="int">
+	select <include refid="CrmPriceColumn"/> from  crm_price where id=#{id}
+	</select>
+	
+	<update id="editById" parameterMap="CrmPriceparaMap">
+	update crm_price set
+	<if test="number !=null and number !=''">
+		 number=#{number}, 
+	</if>
+	<if test="cid !=null and cid !=''">
+		 cid=#{cid}, 
+	</if>
+	<if test="user !=null and user !=''">
+		 user=#{user}, 
+	</if>
+	<if test="price !=null and price !=''">
+		 price=#{price}, 
+	</if>
+	
+	<if test="title !=null and title !=''">
+		 title=#{title}, 
+	</if>
+	
+	<if test="type !=null and type !=''">
+		 type=#{type}, 
+	</if>
+	<if test="viewid !=null and viewid !=''">
+		 viewid=#{viewid}, 
+	</if>
+	<if test="cname !=null and cname !=''">
+		 cname=#{cname},
+	</if>	
+	<if test="uid !=null and uid !=''">
+		 uid=#{uid}
+	</if>
+	where id=#{id}
+	</update>
+	
+		<!--删除-->
+	<delete id="delById">
+	   delete from  crm_price where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>	
+	
+</mapper>

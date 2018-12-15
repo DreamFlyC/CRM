@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmleavingmessage.persistence.CrmLeavingMessageMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmLeavingMessage" id="CrmLeavingMessageparaMap">
+<parameter property="id" resultMap="id" />
+<parameter property="email" resultMap="email" />
+<parameter property="name" resultMap="name" />
+<parameter property="type" resultMap="type" />
+<parameter property="adddate" resultMap="add_date" />
+<parameter property="phone" resultMap="phone" />
+<parameter property="remark" resultMap="remark" />
+</parameterMap>
+
+<resultMap type="CrmLeavingMessage" id="CrmLeavingMessageResultMap">
+        <id property="id" column="id" />
+        <result property="email" column="email" />
+         <result property="name" column="name" />
+          <result property="type" column="type" />
+           <result property="adddate" column="add_date" />
+            <result property="phone" column="phone" />
+             <result property="remark" column="remark" />
+        </resultMap>
+        <sql id="CrmLeavingMessageColumn">id,email,name,type,add_date,phone,remark</sql>
+        
+        <!--新建任务（save）方法 -->
+	<insert id="save" parameterType="CrmLeavingMessage"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into crm_leaving_message (email,name,type,add_date,phone,remark) values (#{email},#{name},#{type},now(),#{phone},#{remark});
+    	]]>
+		
+	</insert>
+ <select id="getList" parameterType="CrmLeavingMessage" resultMap="CrmLeavingMessageResultMap">
+ 		select * from crm_leaving_message
+ </select>
+ 
+ <select id="getCount" resultType="int">
+	   select count(1) from crm_leaving_message
+	</select>
+	
+	<select id="getById" resultMap="CrmLeavingMessageResultMap" parameterType="int">
+	   select <include refid="CrmLeavingMessageColumn"/> from crm_leaving_message where id = #{id}
+	</select>
+	
+	<!--修改 -->
+	<update id="editById"  parameterMap="CrmLeavingMessageparaMap">
+		UPDATE
+		crm_leaving_message
+		<set>
+			<if test="email != null and email != ''">
+				email = #{email},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="type != null and type != ''">
+				type = #{type},
+			</if>
+			<if test="phone != null and phone != ''">
+				phone = #{phone},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delById">
+	   delete from crm_leaving_message where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+</mapper>

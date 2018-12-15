@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmbusiness.persistence.CrmBusinessMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmBusiness" id="CrmBusinessparaMap">
+<parameter property="id" resultMap="id" />
+<parameter property="user" resultMap="user" />
+<parameter property="username" resultMap="username" />
+<parameter property="password" resultMap="password" />
+<parameter property="type" resultMap="type" />
+<parameter property="date" resultMap="date" />
+<parameter property="uid" resultMap="uid" />
+</parameterMap>
+
+<resultMap type="CrmBusiness" id="CrmBusinessResultMap">
+        <id property="id" column="id" />
+        <result property="user" column="user" />
+         <result property="username" column="username" />
+          <result property="password" column="password" />
+           <result property="type" column="type" />
+            <result property="date" column="date" />
+             <result property="uid" column="uid" />
+        </resultMap>
+        <sql id="CrmBusinessColumn">id,user,username,password,type,date,uid</sql>
+        
+        <!--新建任务（save）方法 -->
+	<insert id="save" parameterType="CrmBusiness"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into crm_business (user,username,password,type,date,uid) values (#{user},#{username},#{password},#{type},now(),#{uid});
+    	]]>
+		
+	</insert>
+ <select id="getList" parameterType="CrmBusiness" resultMap="CrmBusinessResultMap">
+ 		select * from crm_business
+ </select>
+ 
+ <select id="getCount" resultType="int">
+	   select count(1) from crm_business
+	</select>
+	
+	<select id="getById" resultMap="CrmBusinessResultMap" parameterType="int">
+	   select <include refid="CrmBusinessColumn"/> from crm_business where id = #{id}
+	</select>
+	
+	<!--修改 -->
+	<update id="editById"  parameterMap="CrmBusinessparaMap">
+		UPDATE
+		crm_business
+		<set>
+			<if test="user != null and user != ''">
+				user = #{user},
+			</if>
+			<if test="username != null and username != ''">
+				username = #{username},
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+			<if test="type != null and type != ''">
+				type = #{type},
+			</if>
+			<if test="uid != null and uid != ''">
+				uid = #{uid},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delById">
+	   delete from crm_business where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+</mapper>

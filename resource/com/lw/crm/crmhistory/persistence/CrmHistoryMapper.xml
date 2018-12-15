@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmhistory.persistence.CrmHistoryMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="CrmHistory"
+		id="CrmHistoryparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="number" resultMap="number" />
+		<parameter property="title" resultMap="title" />
+		<parameter property="price" resultMap="price" />
+		<parameter property="type" resultMap="type" />
+		<parameter property="date" resultMap="date" />
+		<parameter property="uid" resultMap="uid" />
+		<parameter property="pid" resultMap="pid" />
+		<parameter property="stock" resultMap="stock" />
+		<parameter property="note" resultMap="note" />
+		<parameter property="address" resultMap="address" />
+	</parameterMap>
+
+	<resultMap type="CrmHistory" id="CrmHistoryResultMap">
+		<id property="id" column="id" />
+		<result property="number" column="number" />
+		<result property="title" column="title" />
+		<result property="price" column="price" />
+		<result property="type" column="type" />
+		<result property="date" column="date" />
+		<result property="uid" column="uid" />
+		<result property="pid" column="pid" />
+		<result property="stock" column="stock" />
+		<result property="note" column="note" />
+		<result property="address" column="address" />
+		<association property="crmBuyInfo" fetchType="lazy" column="pid" select="com.lw.crm.crmbuyinfo.persistence.CrmBuyInfoMapper.getById"></association>
+	</resultMap>
+
+	<sql id="CrmHistoryColumn">
+		id,number,title,price,type,date,uid,stock,pid,note,address
+	</sql>
+
+	<select id="getList" parameterType="CrmHistory"
+		resultMap="CrmHistoryResultMap">
+		select
+		<include refid="CrmHistoryColumn" />
+		from crm_history where pid=#{pid} order by id,date
+		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+
+	<!--getById -->
+	<select id="getById" resultMap="CrmHistoryResultMap"
+		parameterType="CrmHistory">
+		select
+		<include refid="CrmHistoryColumn" />
+		from crm_history
+		where pid=#{_parameter}
+	</select>
+
+	<!--添加产品（save）方法 -->
+	<insert id="save" parameterType="CrmHistory"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into crm_history(number,title,price,type,stock,pid,address,note,uid) 
+    		values(#{number},#{title},#{price},#{type},#{stock},#{pid},#{address},#{note},#{uid});
+    	]]>
+		<selectKey keyProperty="id" resultType="int">
+			select LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<!--查询信息总条数 -->
+	<select id="getCount" resultType="int" parameterType="int">
+		select count(1) as total from crm_history
+		<where>
+			1 = 1
+			and pid=#{id}
+		</where>
+	</select>
+	
+	
+     <!--根据pid查询所有数据  -->
+     
+     
+</mapper>

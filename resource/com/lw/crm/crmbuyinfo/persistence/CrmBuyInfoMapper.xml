@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmbuyinfo.persistence.CrmBuyInfoMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmBuyInfo" id="CrmBuyInfoparaMap"> 
+	<parameter property="id" resultMap="id" />
+	<parameter property="number" resultMap="number" />
+	<parameter property="title" resultMap="title" />
+	<parameter property="price" resultMap="price" />
+	<parameter property="type" resultMap="type" />
+	<parameter property="date" resultMap="date" />
+	<parameter property="uid" resultMap="uid" />
+	<parameter property="pid" resultMap="pid" />
+	<parameter property="stocknum" resultMap="stocknum" />
+	<parameter property="stock" resultMap="stock" />
+	<parameter property="leavstock" resultMap="leavstock" />
+</parameterMap>
+
+<resultMap type="CrmBuyInfo" id="CrmBuyInfoResultMap">
+    <id property="id" column="id" />
+	<result property="number" column="number" />
+	<result property="title" column="title" />
+	<result property="price" column="price" />
+	<result property="type" column="type" />
+	<result property="date" column="date" />
+	<result property="uid" column="uid" />
+	<result property="pid" column="pid" />
+	<result property="stocknum" column="stocknum" />
+	<result property="stock" column="stock" />
+	<result property="leavstock" column="leavstock"/>
+	<association property="crmStock" fetchType="lazy" column="pid" select="com.lw.crm.crmstock.persistence.CrmStockMapper.getById" />
+	<association property="crmProduct" fetchType="lazy" column="pid" select="com.lw.crm.crmproduct.persistence.CrmProductMapper.getById" />	
+</resultMap>
+
+<sql id="CrmBuyInfoColumn">
+id,number,title,price,type,date,uid,stocknum,stock,leavstock,pid
+</sql>
+
+<select id="getList" parameterType="CrmBuyInfo"
+		resultMap="CrmBuyInfoResultMap">
+		select
+		<include refid="CrmBuyInfoColumn" />
+		from crm_buyinfo  where pid=#{pid} order by id,date
+	</select>
+
+<!--getById  -->
+	<select id="getById" resultMap="CrmBuyInfoResultMap"
+		parameterType="CrmBuyInfo">
+	    select
+		<include refid="CrmBuyInfoColumn" />
+		from  crm_buyinfo 
+		 where pid=#{_parameter} 
+	</select>
+
+<!--添加产品（save）方法 -->
+	<insert id="save" parameterType="CrmBuyInfo"
+		keyColumn="id" useGeneratedKeys="true">
+		<![CDATA[
+    		insert into crm_buyinfo(number,title,price,type,stocknum,leavstock,pid,stock,uid) 
+    		values(#{number},#{title},#{price},#{type},#{stocknum},#{stocknum},#{pid},#{stock},#{uid});
+    	]]>
+	</insert>
+	
+	<update id="editById" parameterType="CrmBuyInfo">
+		UPDATE
+		crm_buyinfo
+		<set>
+			<if test="stocknum != null and stock == null">
+				stocknum = #{stocknum},leavstock=#{stocknum}
+			</if>
+			<if test="stock != null">
+				stock = #{stock},leavstock=#{leavstock}
+			</if>
+			
+		</set>
+		WHERE pid = #{pid}
+	</update>
+
+<!--清理数据 -->
+	<!-- 批量删除任务信息 -->
+	<delete id="delete" parameterType="int">
+		delete from crm_buyinfo where pid in
+		<foreach item="crmItem" collection="array" open="("
+			separator="," close=")">
+			#{crmItem}
+		</foreach>
+	</delete>
+
+</mapper>

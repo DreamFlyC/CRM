@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lw.shiroaction.rolevalue.persistence.ShiroActionRoleValueMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="ShiroActionRoleValue" id="ShiroActionRoleValueparaMap">
+		<parameter property="id" resultMap="id"/>
+		<parameter property="name" resultMap="name"/>
+		<parameter property="action_model_id" resultMap="action_model_id"/>
+		<parameter property="action_type" resultMap="action_type"/>
+		<parameter property="action_url" resultMap="action_url"/>
+		<parameter property="action_users_group_id" resultMap="action_users_group_id"/>
+	</parameterMap>
+	
+	<resultMap type="ShiroActionRoleValue" id="ShiroActionRoleValueResultMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="action_model_id" column="action_model_id"/>
+		<result property="action_type" column="action_type"/>
+		<result property="action_url" column="action_url"/>
+		<result property="action_users_group_id" column="action_users_group_id"/>
+	</resultMap>
+	
+	<sql id="ShiroActionRoleValueColumn">id,name,action_model_id,action_type,action_url,action_users_group_id</sql>
+	<insert id="save" parameterMap="ShiroActionRoleValueparaMap" keyProperty="id" useGeneratedKeys="true">
+    	<![CDATA[
+    		insert into shiro_action_role_value(name,action_model_id,action_type,action_url,action_users_group_id) 
+    		values(#{name},#{action_model_id},#{action_type},#{action_url},#{action_users_group_id});
+    	]]>
+	</insert>
+	
+	<select id="getList" resultMap="ShiroActionRoleValueResultMap" parameterType="map">
+		SELECT <include refid="ShiroActionRoleValueColumn"/> FROM shiro_action_role_value  where 1=1
+		<if test="id!=null"> and id=#{id}</if>
+		<if test="action_model_id!=null"> and action_model_id=#{action_model_id}</if>
+		<if test="action_users_group_id!=null"> and action_users_group_id=#{action_users_group_id}</if>
+		<if test="action_type!=null"> and action_type=#{action_type}</if>
+		 order by id desc
+		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+	
+	<select id="getCount" resultType="int">
+	   select count(1) from shiro_action_role_value where 1=1
+	   <if test="id!=null"> and id=#{id}</if>
+	   <if test="action_model_id!=null"> and action_model_id=#{action_model_id}</if>
+		<if test="action_users_group_id!=null"> and action_users_group_id=#{action_users_group_id}</if>
+		<if test="action_type!=null"> and action_type=#{action_type}</if>
+		 order by id desc
+	   <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+	
+	<select id="getByRoleValueId" resultMap="ShiroActionRoleValueResultMap">
+	   select <include refid="ShiroActionRoleValueColumn"/> from shiro_action_role_value where action_model_id = #{action_model_id}
+	</select>
+	
+	<select id="getById" resultMap="ShiroActionRoleValueResultMap" parameterType="int">
+	   select <include refid="ShiroActionRoleValueColumn"/> from shiro_action_role_value where id = #{id}
+	</select>
+	
+	<update id="editById" parameterMap="ShiroActionRoleValueparaMap">
+		<![CDATA[
+		   update shiro_action_role_value set name = #{name},action_model_id=#{action_model_id},action_type=#{action_type},action_url=#{action_url},action_users_group_id=#{action_users_group_id} where id = #{id}
+		]]>
+	</update>
+	
+	<delete id="delById">
+	   delete from shiro_action_role_value where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+	
+	<delete id="delByUsersId">
+	   delete from shiro_action_role_value where action_users_group_id = #{id}
+	</delete>
+</mapper>

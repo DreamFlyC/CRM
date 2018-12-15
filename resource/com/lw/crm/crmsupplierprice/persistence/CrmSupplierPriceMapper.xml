@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmsupplierprice.persistence.CrmSupplierPriceMapper">
+    <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+    <parameterMap type="CrmSupplierPrice" id="CrmSupplierPriceparaMap">
+        <parameter property="id" resultMap="id" />
+        <parameter property="price" resultMap="price"/>
+        <parameter property="type" resultMap="type" />
+        <parameter property="name" resultMap="name" />
+        <parameter property="uid" resultMap="uid"/>
+        <parameter property="sid" resultMap="sid"/>
+        <parameter property="snumber" resultMap="snumber" />
+        <parameter property="date" resultMap="date" />
+        <parameter property="unit" resultMap="unit" />
+        <parameter property="seq" resultMap="seq" />
+    </parameterMap>
+    <resultMap type="CrmSupplierPrice" id="CrmSupplierPriceResultMap">
+        <id property="id" column="id" />
+        <result property="price" column="price"/>
+        <result property="type" column="type" />
+        <result property="name" column="name"/>
+        <result property="uid" column="uid"/>
+        <result property="sid" column="sid"/>
+        <result property="snumber" column="snumber" />
+        <result property="date" column="date" />
+        <result property="unit" column="unit" jdbcType="VARCHAR" />
+        <result property="seq" column="seq" />
+        <association property="crmName" fetchType="lazy" column="type" select="com.lw.crm.crmname.persistence.CrmNameMapper.getById"></association>
+        <association property="crmSupplier" fetchType="lazy" column="sid" select="com.lw.crm.crmsupplier.persistence.CrmSupplierMapper.getById"></association>
+    </resultMap>
+
+    <sql id="CrmSupplierPriceColumn">id,price,type,name,uid,sid,snumber,date,unit,seq</sql>
+
+    <!--查询信息总条数 -->
+    <select id="getCount" resultType="int" parameterType="map">
+        select count(1) as total from crm_supplier_price
+        <where>
+           <if test="price != null and price !=''">
+               AND price=#{price}
+           </if>
+            <if test="type != null and type != ''">
+                AND type =#{type}
+            </if>
+            <if test="name != null and name != ''">
+                AND name =#{name}
+            </if>
+            <if test="sids != null and sids != ''">
+                AND sid in
+                <foreach item="sidItem" collection="sids" open="(" separator=","
+                         close=")">
+                    #{sidItem}
+                </foreach>
+            </if>
+            <if test="snumber != null and snumber != ''">
+                and snumber=#{snumber}
+            </if>
+            <if test="ids != null and ids != ''">
+                and id in
+                <foreach item="CrmItem" collection="ids" open="(" separator=","
+                         close=")">
+                    #{CrmItem}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--新建任务（save）方法 -->
+    <insert id="save" parameterType="CrmSupplierPrice"
+            keyColumn="id" useGeneratedKeys="true">
+        insert into crm_supplier_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="price != null and price != ''">
+                price,
+            </if>
+            <if test="type != null and type != ''">
+                type,
+            </if>
+            <if test="name != null and name != ''">
+                name,
+            </if>
+            <if test="sid != null and sid != ''">
+                sid,
+            </if>
+            <if test="snumber != null and snumber != ''">
+                snumber,
+            </if>
+            <if test="unit != null and unit != ''">
+                unit,
+            </if>
+            <if test="seq != null and seq != ''">
+                seq,
+            </if>
+            date
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="price != null and price != ''">
+                #{price},
+            </if>
+            <if test="type != null and type != ''">
+                #{type},
+            </if>
+            <if test="name != null and name != ''">
+                #{name},
+            </if>
+            <if test="sid != null and sid != ''">
+                #{sid},
+            </if>
+            <if test="snumber != null and snumber != ''">
+                #{snumber},
+            </if>
+            <if test="unit != null and unit != ''">
+                #{unit},
+            </if>
+            <if test="seq != null and seq != ''">
+                #{seq},
+            </if>
+            now()
+        </trim>
+    </insert>
+
+
+
+    <!-- 根据id查询所有信息 -->
+    <select id="getList" parameterType="map" resultMap="CrmSupplierPriceResultMap">
+        select <include refid="CrmSupplierPriceColumn" />
+        from  crm_supplier_price
+        <where>
+            <if test="price != null and price !=''">
+                AND price=#{price}
+            </if>
+            <if test="type != null and type != ''">
+                AND type =#{type}
+            </if>
+            <if test="name != null and name != ''">
+                AND name =#{name}
+            </if>
+            <if test="sids != null and sids != ''">
+                AND sid in
+                <foreach item="sidItem" collection="sids" open="(" separator=","
+                         close=")">
+                    #{sidItem}
+                </foreach>
+            </if>
+            <if test="snumber != null and snumber != ''">
+                and snumber=#{snumber}
+            </if>
+            <if test="ids != null and ids != ''">
+                and id in
+                <foreach item="CrmItem" collection="ids" open="(" separator=","
+                         close=")">
+                    #{CrmItem}
+                </foreach>
+            </if>
+        </where>
+        order by id desc
+        <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+    </select>
+
+    <!--getById  -->
+    <select id="getById" resultMap="CrmSupplierPriceResultMap"
+            parameterType="CrmSupplierPrice">
+        select
+        <include refid="CrmSupplierPriceColumn" />
+        from  crm_supplier_price
+        where id=#{_parameter}
+    </select>
+
+
+    <!--修改  -->
+    <update id="editById">
+        update
+        crm_supplier_price
+        <set>
+            <if test=" price != null and price !=''">
+                price = #{price},
+            </if>
+            <if test=" type != null and type !=''">
+                type = #{type},
+            </if>
+            <if test=" name != null and name !=''">
+                name = #{name},
+            </if>
+            <if test=" sid != null and sid !=''">
+                sid = #{sid},
+            </if>
+            <if test=" snumber != null and snumber !=''">
+                snumber = #{snumber},
+            </if>
+            <if test=" unit != null and unit !=''">
+                unit = #{unit},
+            </if>
+            <if test=" seq != null and seq !=''">
+                seq = #{seq},
+            </if>
+        </set>
+        <where>
+            <if test="id != null and id!=''">
+                and	id = #{id}
+            </if>
+            <if test=" sid != null and sid !=''">
+                and	  sid = #{sid}
+            </if>
+            <if test=" snumber != null and snumber !=''">
+                and  snumber = #{snumber}
+            </if>
+        </where>
+    </update>
+
+    <delete id="delById">
+        delete from crm_supplier_price where id in
+        <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+    </delete>
+</mapper>
+

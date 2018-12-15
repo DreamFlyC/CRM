@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lw.duty.persistence.DutyMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="Duty" id="DutyparaMap">
+		<parameter property="id" resultMap="id" />
+		<parameter property="number" resultMap="number" />
+		<parameter property="title" resultMap="title" />
+		<parameter property="user" resultMap="user" />
+		<parameter property="startdate" resultMap="startdate" />
+		<parameter property="enddate" resultMap="enddate" />
+		<parameter property="content" resultMap="content" />
+		<parameter property="appendix" resultMap="appendix" />
+		<parameter property="note" resultMap="note" />
+		<parameter property="dkey" resultMap="dkey" />
+		<parameter property="ndkey" resultMap="ndkey" />
+		<parameter property="date" resultMap="date" />
+		<parameter property="uid" resultMap="uid" />
+		<parameter property="type" resultMap="type" />
+		<parameter property="level" resultMap="level" />
+		<parameter property="begintime" resultMap="begintime" />
+		<parameter property="stoptime" resultMap="stoptime" />
+		<parameter property="departId" resultMap="departId" />
+		<parameter property="sumProgress" resultMap="sumProgress" />
+		<parameter property="sdate" resultMap="sdate" />
+		<parameter property="edate" resultMap="edate" />
+		<parameter property="total" resultMap="total" />
+		<parameter property="usersgroupid" resultMap="usersgroupid" />
+	</parameterMap>
+	
+	<parameterMap type="FeedBack" id="FeedBackparaMap">
+		<parameter property="days" resultMap="days" />
+		<parameter property="count1" resultMap="count1" />
+		<parameter property="count2" resultMap="count2" />
+		<parameter property="count3" resultMap="count3" />
+		<parameter property="count4" resultMap="count4" />
+		<parameter property="count5" resultMap="count5" />
+		<parameter property="count6" resultMap="count6" />
+		<parameter property="count7" resultMap="count7" />
+		<parameter property="count8" resultMap="count8" />
+		<parameter property="count9" resultMap="count9" />
+	</parameterMap>
+	
+	<resultMap type="Duty" id="DutyResultMap">
+		<id property="id" column="id" />
+		<result property="number" column="number" />
+		<result property="title" column="title" />
+		<result property="user" column="user" />
+		<result property="startdate" column="startdate" />
+		<result property="enddate" column="enddate" />
+		<result property="content" column="content" />
+		<result property="appendix" column="appendix" />
+		<result property="note" column="note" />
+		<result property="dkey" column="dkey" />
+		<result property="ndkey" column="ndkey" />
+		<result property="date" column="date" />
+		<result property="uid" column="uid" />
+		<result property="type" column="type" />
+		<result property="level" column="level" />
+		<result property="begintime" column="begintime" />
+		<result property="stoptime" column="stoptime" />
+		<result property="departId" column="departId" />
+		<result property="sumProgress" column="sumProgress" />
+		<result property="sdate" column="sdate" />
+		<result property="edate" column="edate" />
+		<result property="total" column="total" />
+		
+		<result property="usersgroupid" column="usersgroupid" />
+		<association property="dutyLog" fetchType="eager" column="id"
+		select="com.lw.duty.persistence.DutyLogMapper.getByIdForDuty" />	
+		<collection property="dutyUser" fetchType="eager" column="id" 
+			select="com.lw.duty.persistence.DutyUserMapper.getList" /> 
+		<collection property="dutyDepart" fetchType="eager" column="departId" 
+		select="com.lw.duty.persistence.DutyDepartMapper.getListById" /> 
+		<!-- <collection property="usersgroupitemList" ofType="ShiroActionUsersGroup" 
+		fetchType="lazy" column="{ids=usersgroupid}" 
+		select="com.lw.shiroaction.usersgroup.persistence.ShiroActionUsersGroupMapper.getListByUsersGroupid"/> -->
+	</resultMap>
+	
+	<resultMap type="FeedBack" id="FeedBackResultMap">
+		<result property="days" column="days" />
+		<result property="count1" column="count1" />
+		<result property="count2" column="count2" />
+		<result property="count3" column="count3" />
+		<result property="count4" column="count4" />
+		<result property="count5" column="count5" />
+		<result property="count6" column="count6" />
+		<result property="count7" column="count7" />
+		<result property="count8" column="count8" />
+		<result property="count9" column="count9" />
+	</resultMap>
+	
+
+	<sql id="DutyColumn">id,number,title,user,startdate,enddate,content,appendix,
+	note,dkey,date,uid,type,level,begintime,stoptime,departId,usersgroupid
+	</sql>
+	
+	<!--查询信息总条数 -->
+	<select id="getCount" resultType="int" parameterType="String">
+		select count(1) from toa_duty
+		<where>
+			1 = 1
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+			<if test="title != null and title != ''">
+				<bind name="pattern" value="'%' + title + '%'" />
+				AND title LIKE #{pattern}
+			</if>
+			<if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(startdate, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and sdate != ''">
+			 <![CDATA[ and DATE_FORMAT(enddate, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if>
+			<if test="dkey!=null and dkey!='' and dkey!=0">
+				AND dkey=#{dkey}
+			</if>
+			<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <= 
+				 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+			</if>
+		</where>
+	</select>
+
+	
+	<select id="getCountUid" resultType="int" parameterType="String" useCache="false">
+		select count(1) from toa_duty t2,toa_duty_user t1
+		<where>
+			t1.dutyid=t2.id
+			<if test="userid != null and userid != '' and userid !=0">
+				AND t1.userid = #{userid}
+			</if>
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND t2.number LIKE #{pattern}
+			</if>
+			<if test="title != null and title != ''">
+				<bind name="pattern" value="'%' + title + '%'" />
+				AND t2.title LIKE #{pattern}
+			</if>
+			<if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(t2.startdate, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and sdate != ''">
+			 <![CDATA[ and DATE_FORMAT(t2.enddate, '%Y-%m-%d ') <= 
+				 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if>
+			<if test="dkey!=null and dkey!='' and dkey!=0">
+				AND t2.dkey=#{dkey}
+			</if>
+			<if test="begintime!=null and begintime!=''">
+	 	 		<![CDATA[ and DATE_FORMAT(t2.begintime, '%Y-%m-%d ') =
+				 DATE_FORMAT(#{begintime} , '%Y-%m-%d') ]]>
+	 	 	</if>
+	 	 	<if test="level!=null and level!=''">
+				and t2.level=#{level}
+			</if>
+	 	 	<if test="ndkey!=null and ndkey!=''">
+				AND t1.dkey!=#{ndkey}
+			</if>
+			<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') <= 
+				 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+			</if>
+			
+		</where>
+	</select>
+	
+	<select id="getCountAll" resultType="int" parameterType="String" useCache="false">
+		select count(1) from toa_duty 
+		<where>
+			1=1 
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+			<if test="title != null and title != ''">
+				<bind name="pattern" value="'%' + title + '%'" />
+				AND title LIKE #{pattern}
+			</if>
+			<if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(startdate, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and sdate != ''">
+			 <![CDATA[ and DATE_FORMAT(enddate, '%Y-%m-%d ') <= 
+				 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if>
+			<if test="dkey!=null and dkey!='' and dkey!=0">
+				AND dkey=#{dkey}
+			</if>
+			<if test="begintime!=null and begintime!=''">
+	 	 		<![CDATA[ and DATE_FORMAT(begintime, '%Y-%m-%d ') =
+				 DATE_FORMAT(#{begintime} , '%Y-%m-%d') ]]>
+	 	 	</if>
+	 	 	<if test="level!=null and level!=''">
+				and level=#{level}
+			</if>
+	 	 	<if test="ndkey!=null and ndkey!=''">
+				AND dkey!=#{ndkey}
+			</if>
+			<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <= 
+				 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+			</if>
+			
+			<if test="date!=null and date != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') = 
+				 DATE_FORMAT(#{date} , '%Y-%m-%d ') ]]>
+			</if>
+		</where>
+ 	</select>
+	
+	<!--查询所有数据 --><!--导出需要用到  -->
+	<select id="getAllDuty" resultMap="DutyResultMap" parameterType="Duty">
+		select * from toa_duty where 1=1
+		<if test="ids != null and ids != ''">
+			and id in
+			<foreach item="dutyItem" collection="ids" open="(" separator=","
+				close=")">
+				#{dutyItem}
+			</foreach>
+		</if>
+		<if test="dkey !=null and dkey!=''">
+			and dkey=#{dkey}
+		</if>
+	</select>
+	
+	<!--17.管理员查询 我的工单(dkey!=3)、信息提醒(dkey=3)等   工单时间从duty表-->
+	<select id="getListAllTwo" resultMap="DutyResultMap" parameterType="Duty" useCache="false">
+	select  DISTINCT t1.* from toa_duty_user t1,toa_duty t2
+	<where>
+		t1.dutyid=t2.id
+		<if test="dkey!=null and dkey!=''">
+			and t1.dkey!=#{dkey} 
+		</if>
+		<if test="ndkey!=null and ndkey!=''">
+			and t1.dkey=#{ndkey} 
+		</if>
+		<if test="stime!=null and stime != ''"> 
+			<![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{stime} , '%Y-%m-%d') ]]>
+		</if>
+		<if test="etime!=null and stime != ''">
+			 <![CDATA[ and DATE_FORMAT(t2.date, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{etime} , '%Y-%m-%d ') ]]>
+		</if>
+	</where>
+	order by id desc
+	</select>
+
+	<!--根据id查询 -->
+	<select id="getById" resultMap="DutyResultMap" useCache="false">
+		select
+		<include refid="DutyColumn" />
+		from toa_duty where id=#{_parameter} order by level,id desc
+	</select>
+
+	<!--根据任务编号,任务名称,日期，任务状态查询 -->
+	<select id="getList" resultMap="DutyResultMap" parameterType="map" useCache="false">
+		select
+		<include refid="DutyColumn" />
+		from toa_duty
+		<where>
+			1 = 1
+			<if test="number != null and number != ''">
+				<bind name="pattern" value="'%' + number + '%'" />
+				AND number LIKE #{pattern}
+			</if>
+			<if test="title != null and title != ''">
+				<bind name="pattern" value="'%' + title + '%'" />
+				AND title LIKE #{pattern}
+			</if>
+			<if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(startdate, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and edate != ''">
+			 <![CDATA[ and DATE_FORMAT(enddate, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if>
+			<if test="dkey!=null and dkey!='' and dkey!=0">
+				AND dkey=#{dkey}
+			</if>
+		</where>
+		order by id desc  
+		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+ 	</select>
+	
+	<!--获取任务总进度  -->
+	<select id="getProgress" parameterType="int" resultType="float" useCache="false">
+		select 
+		((SELECT  sum(dd)  FROM (SELECT sum(progress) as dd  FROM toa_duty_log  where  toa_duty_log.dutyid=#{id}
+		 group by   toa_duty_log.uid) as tjprogress)/(SELECT count(*) FROM (SELECT count(toa_duty_user.userid)
+		 ROWS FROM  toa_duty_user where  toa_duty_user.dutyid=#{id} group by   toa_duty_user.userid) aa)) as sumProgress
+		
+		 from toa_duty where toa_duty.id=#{id}
+	</select>
+	
+
+	<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="Duty"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into toa_duty(number,title,user,startdate,enddate,content,appendix,dkey,uid,type,level,departId,usersgroupid) 
+    		values(#{number},#{title},#{user},#{startdate},#{enddate},#{content},#{appendix},#{dkey},#{uid},#{type},#{level,},#{departId},#{departId});
+    	]]>
+		<selectKey keyProperty="id" resultType="int">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<!--修改 -->
+	<update id="editById" parameterType="Duty">
+		UPDATE
+		toa_duty
+		<set>
+			<if test="number != null">
+				number = #{number},
+			</if>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="sdate != null and sdate != ''">
+				startdate = #{sdate},
+			</if>
+			<if test="edate != null and edate != ''">
+				enddate = #{edate},
+			</if>
+			<if test="appendix != null">
+				appendix = #{appendix},
+			</if>
+			<if test="note != null and note !=''">
+				note = #{note},
+			</if>
+			<if test="content != null and content!=''">
+				content = #{content},
+			</if>
+			<if test="date != null and date!=''">
+				date = #{date},
+			</if>
+			<if test="dkey != null and dkey!=''">
+				dkey = #{dkey},
+			</if> 
+			<if test="begintime != null and begintime!=''">
+				begintime = #{begintime},
+			</if>
+			<if test="stoptime != null and stoptime!=''">
+				stoptime = #{stoptime},
+			</if>
+			<if test="departId != null and departId !=''">
+				departId = #{departId},
+			</if>
+			<if test="uid != null and uid !=''">
+				uid = #{uid},
+			</if>
+			<if test=" user != null and user !=''">
+				user = #{user},
+			</if>
+		</set>
+		WHERE id = #{id}
+		<selectKey keyProperty="id" resultType="int">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</update>
+
+	<!--清理数据 -->
+	<!-- 批量删除任务信息 -->
+	<delete id="delete" parameterType="int">
+		delete from toa_duty where id in
+		<foreach item="dutyItem" collection="array" open="("
+			separator="," close=")">
+			#{dutyItem}
+		</foreach>
+	</delete>
+
+	<!--根据id、任务状态、执行人查询所有数据 -->
+	<select id="getDuty" resultMap="DutyResultMap" parameterType="Duty" useCache="false">
+		select
+		<include refid="DutyColumn" />
+		from toa_duty
+		<!-- select t.*,l.progress FROM toa_duty t left JOIN( select sum(progress) 
+			as progress,duid from toa_duty_log GROUP BY duid )l on t.id=l.duid -->
+		<where>
+			1 = 1
+			<if test="id != null and id != ''">
+				AND id = #{id}
+			</if>
+			<if test="user != null and user != ''">
+				<bind name="pattern" value="'%' + user + '%'" />
+				AND user LIKE #{pattern}
+			</if>
+			<if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(startdate, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and sdate != ''">
+			 <![CDATA[ and DATE_FORMAT(enddate, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if>
+		</where>
+	</select>
+
+	<!-- 投訴 統計 -->
+	<select id="getMonth" resultMap="FeedBackResultMap" parameterType="Duty">
+	
+					SELECT DATE_FORMAT(date,'%Y%m%d') days ,
+					sum(CASE type WHEN 1 THEN 1 ELSE 0 END ) count1,
+					sum(CASE type WHEN 2 THEN 1 ELSE 0 END ) count2,
+					sum(CASE type WHEN 3 THEN 1 ELSE 0 END ) count3,
+					sum(CASE type WHEN 4 THEN 1 ELSE 0 END ) count4,
+					sum(CASE type WHEN 5 THEN 1 ELSE 0 END ) count5,
+					sum(CASE type WHEN 6 THEN 1 ELSE 0 END ) count6,
+					sum(CASE type WHEN 7 THEN 1 ELSE 0 END ) count7,
+					sum(CASE type WHEN 8 THEN 1 ELSE 0 END ) count8,
+					sum(CASE type WHEN 9 THEN 1 ELSE 0 END ) count9
+					FROM toa_duty
+		<where>
+			<if test="sdate!=null and sdate != ''"> 
+			<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+			 DATE_FORMAT(#{sdate} , '%Y-%m-%d') ]]>
+			</if>
+			<if test="edate!=null and edate != ''">
+			 <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <= 
+			 DATE_FORMAT(#{edate} , '%Y-%m-%d ') ]]>
+			</if>
+			<if test="type!=null and type!=''">
+			 and type in
+			<foreach item="dutyItem" collection="type" open="(" separator=","
+				close=")">
+				#{dutyItem}
+			</foreach>
+			</if>
+		</where>
+		GROUP BY days
+	</select> 
+
+    <delete id="delById">
+	   delete from toa_duty where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+	
+</mapper>
+
+

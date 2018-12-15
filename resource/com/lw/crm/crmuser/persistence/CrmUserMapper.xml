@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.crm.crmuser.persistence.CrmUserMapper">
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+<parameterMap type="CrmUser" id="CrmUserparaMap">
+<parameter property="id" resultMap="id" />
+<parameter property="user" resultMap="user" />
+</parameterMap>
+
+<resultMap type="CrmUser" id="CrmUserResultMap">
+        <id property="id" column="id" />
+        <result property="user" column="user" />
+        
+        </resultMap>
+        <sql id="CrmUserColumn">id,user</sql>
+
+<!--新建任务（save）方法 -->
+	<insert id="save" parameterType="CrmUser"
+		keyColumn="id" useGeneratedKeys="true">
+<![CDATA[
+    		insert into crm_user (user) values (#{user});
+    	]]>
+		
+	</insert>
+ <select id="getList" parameterType="CrmUser" resultMap="CrmUserResultMap">
+ 		select * from crm_user 
+ 		order by id desc
+ 		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+ </select>
+ 
+ <select id="getCount" resultType="int">
+	   select count(1) from crm_user
+	</select>
+	
+	<select id="getById" resultMap="CrmUserResultMap" parameterType="int">
+	   select <include refid="CrmUserColumn"/> from crm_user where id = #{id}
+	</select>
+	
+	<!--修改 -->
+	<update id="editById"  parameterMap="CrmUserparaMap">
+		UPDATE
+		crm_user
+		<set>
+			<if test="user != null and user != ''">
+				user = #{user},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delById">
+	   delete from crm_user where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+
+</mapper>

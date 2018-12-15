@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lw.shiroaction.usersgroup.persistence.ShiroActionUsersGroupMapper">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+	<parameterMap type="ShiroActionUsersGroup" id="ShiroActionUsersGroupparaMap">
+		<parameter property="id" resultMap="id"/>
+		<parameter property="name" resultMap="name"/>
+		<parameter property="remark" resultMap="remark"/>
+		<parameter property="enable" resultMap="enable"/>
+		<parameter property="add_date" resultMap="add_date"/>
+	</parameterMap>
+	
+	<resultMap type="ShiroActionUsersGroup" id="ShiroActionUsersGroupResultMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="remark" column="remark"/>
+		<result property="enable" column="enable"/>
+		<result property="add_date" column="add_date"/>
+	</resultMap>
+	
+	<sql id="ShiroActionUsersGroupColumn">id,name,remark,enable,add_date</sql>
+	<insert id="save" parameterMap="ShiroActionUsersGroupparaMap" keyProperty="id" useGeneratedKeys="true">
+    	<![CDATA[
+    		insert into shiro_action_users_group(name,remark,enable,add_date) 
+    		values(#{name},#{remark},#{enable},#{add_date});
+    	]]>
+	</insert>
+	
+	<select id="getList" resultMap="ShiroActionUsersGroupResultMap" parameterType="map">
+		SELECT <include refid="ShiroActionUsersGroupColumn"/> FROM shiro_action_users_group  where 1=1
+		 order by id desc
+		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+	
+	<!-- 修改界面显示相应部门 -->
+	<select id="getListByGroupid" resultMap="ShiroActionUsersGroupResultMap" parameterType="map">
+	SELECT <include refid="ShiroActionUsersGroupColumn"/> FROM shiro_action_users_group  where 1=1
+		<if test="id!=null">
+			and id in (${id})
+		</if></select>
+	
+	<select id="getCount" resultType="int">
+	   select count(1) from shiro_action_users_group
+	   <if test="id!=null">and id=#{id}</if>
+		 order by id desc
+	   <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+	</select>
+	
+	<select id="getById" resultMap="ShiroActionUsersGroupResultMap" parameterType="int">
+	   select <include refid="ShiroActionUsersGroupColumn"/> from shiro_action_users_group where id = #{id}
+	</select>
+	
+	<select id="getByUsersGroupId" resultMap="ShiroActionUsersGroupResultMap">
+	   select <include refid="ShiroActionUsersGroupColumn"/> from shiro_action_users_group where id = #{action_users_group_id}
+	</select>
+	
+	<update id="editById" parameterMap="ShiroActionUsersGroupparaMap">
+		<![CDATA[
+		   update shiro_action_users_group set name = #{name},remark=#{remark},enable=#{enable},add_date=#{add_date} where id = #{id}
+		]]>
+	</update>
+	
+	<delete id="delById">
+	   delete from shiro_action_users_group where id in
+	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	</delete>
+
+	<select id="getListByUsersGroupid" resultMap="ShiroActionUsersGroupResultMap" parameterType="map" >  
+		SELECT <include refid="ShiroActionUsersGroupColumn"/> FROM shiro_action_users_group  where  1=1 and id in (${ids})
+		order by id desc
+	</select>
+	
+	<select id="getListByids" resultMap="ShiroActionUsersGroupResultMap" parameterType="map" >  
+		SELECT <include refid="ShiroActionUsersGroupColumn"/> FROM shiro_action_users_group where 1=1
+	    <if test="ids!=null and ids!=''">
+	    and id in
+	    <foreach item="item" collection="ids" open="(" separator="," close=")">(#{item})</foreach>
+	    order by id
+	    </if>
+	</select>
+	
+	
+</mapper>
