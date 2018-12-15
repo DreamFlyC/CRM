@@ -28,5 +28,4 @@ public interface ICrmStockService extends IBaseService<CrmStock>{
 
 	List<CrmStock> getStatisticsByType(Map<String, Object> map);
 
-    int test();
 }

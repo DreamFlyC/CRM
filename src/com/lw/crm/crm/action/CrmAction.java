@@ -346,16 +346,6 @@ public class CrmAction extends BaseAction {
 		return "/WEB-INF/crm/crm_history";
 	}
 	
-	/*
-	 * create by: CZP
-	 * description:测试事务
-	 * create time: 15:16 2018/12/14
-	 * @return 
-	 */
-	@RequestMapping(value = "/test.do")
-	public int test(){
-		return crmStockService.test();
-	}
 
 
 

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+@Transactional(rollbackFor = RuntimeException.class)
 @Service("CrmStockServiceImpl")
 public class CrmStockServiceImpl extends BaseServiceImpl<CrmStock> implements ICrmStockService{
 	@Autowired
@@ -45,19 +46,4 @@ public class CrmStockServiceImpl extends BaseServiceImpl<CrmStock> implements IC
         return crmStockMapper.getStatisticsByType(map);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-	public int test(){
-    	CrmStock crmStock=new CrmStock();
-    	crmStock.setSnumber("1111");
-		crmStock.setTitle("test");
-		crmStock.setPrice(6.56);
-    	crmStock.setType(1);
-		crmStock.setUid(1);
-		crmStock.setStocknum("22");
-    	crmStockMapper.save(crmStock);
-    	int i=1/0;
-		crmStockMapper.editById(crmStock);
-		return i;
-	}
 }
