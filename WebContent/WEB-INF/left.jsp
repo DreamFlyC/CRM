@@ -269,7 +269,7 @@
 				<div id="collapse12" class="panel-collapse collapse">
 					<div class="panel-body" style="padding:0px;background-color: #eff8fc;">
 					  	<ul class="menuson">
-					  		<li><cite></cite><a href="<%=basePath%>manage/crmpurchacse/crmpurchacse_list.html" id="page_crmpurchacse_list">采购信息列表</a><i></i></li>
+					  		<li><cite></cite><a href="<%=basePath%>manage/crmpurchacse.html" id="page_crmpurchacse_list">采购信息列表</a><i></i></li>
 							<li><cite></cite><a href="<%=basePath%>manage/crmpurchacseitem.html" id="page_crmpurchacseitem_list">采购明细信息列表</a><i></i></li>
 						</ul>
 					</div>

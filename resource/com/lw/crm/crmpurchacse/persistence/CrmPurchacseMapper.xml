@@ -31,7 +31,7 @@
 </resultMap>
 
 	<sql id="CrmPurchacseColumn">
-		id,number,title,date,uid,price,note,type,address,is_approval
+		id,number,title,date,uid,price,note,address,is_approval
 	</sql>
 
 <!--查询信息总条数 -->
@@ -54,9 +54,6 @@
 			<if test="number != null and number != ''">
 				<bind name="pattern" value="'%' + number + '%'" />
 				AND number LIKE #{pattern}
-			</if>
-			<if test="type != null and type !=0 ">
-				AND type = #{type}
 			</if>
 		</where>
 		 order by id desc limit #{currentpage},#{pagesize} 
