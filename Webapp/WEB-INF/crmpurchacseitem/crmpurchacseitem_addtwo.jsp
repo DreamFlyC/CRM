@@ -180,13 +180,13 @@
                         return false;
                     }
                 })
-            }else{
+            } else {
                 submitData();
             }
 
         }
 
-        function submitData(){
+        function submitData() {
             var data = saveTable("table");
             var json = JSON.stringify(data).toString();
             $.ajax({
@@ -380,9 +380,11 @@
                         <tr>
                             <td class="info col-md-2 text-right">采购数量:</td>
                             <td class="col-md-10">
-                                <input type="number" step="1" class="form-control" id="numitem" name="num" value="" maxlength="50"
+                                <input type="number" step="1" class="form-control" id="numitem" name="num" value=""
+                                       maxlength="50"
                                        placeholder="请输入采购数量" autocomplete="off"
-                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"  
+                                       onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+                                         
                                            onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'0')}else{this.value=this.value.replace(/\D/g,'')}">
                             </td>
                         </tr>
@@ -436,7 +438,7 @@
                 </div>
             </div>
             <div class="modal-footer" style="text-align: center">
-                <button type="button" class="btn btn-default" data-dismiss="modal" >
+                <button type="button" class="btn btn-default" data-dismiss="modal">
                     关闭
                 </button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" id="submititem">
