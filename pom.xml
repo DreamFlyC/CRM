@@ -205,6 +205,35 @@
             <version>3.8.1</version>
         </dependency>
 
+        <!--spring security  -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>4.2.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>4.2.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>4.2.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>4.2.2.RELEASE</version>
+        </dependency>
+
+
+
+
+
+
         <!-- log Start -->
         <!--log4j 在spring3.5.2版本已经过时了，可用log4j2代替，配置教程可参考下面链接的博客-->
         <!--https://blog.csdn.net/Fickle_actor/article/details/8272084-->
