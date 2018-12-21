@@ -80,6 +80,7 @@ public class CrmComplaintsAction extends BaseAction {
         getRequest().setAttribute("crmcomplaints", crmcomplaints);
         return "/WEB-INF/crmcomplaints/crmcomplaints_detail";
     }
+
     /*
      * create by:  WH
      * description: 投诉统计  type:0--默认 1--天  2--月 3--年
@@ -90,7 +91,7 @@ public class CrmComplaintsAction extends BaseAction {
     @RequestMapping(value = "/Listtongji", method = RequestMethod.POST)
     @ResponseBody
     public JsonMsgStatusEntity getListTongJi(HttpServletResponse response, @RequestParam(value = "sDate", required = false) String sDate,
-                                             @RequestParam(value = "status",defaultValue = "0") Integer status, @RequestParam(value = "eDate", required = false) String eDate) {
+                                             @RequestParam(value = "status", defaultValue = "0") Integer status, @RequestParam(value = "eDate", required = false) String eDate) {
         Map<String, Object> map = new HashMap<>();
         if (sDate != null) {
             map.put("sDate", sDate);
@@ -102,16 +103,16 @@ public class CrmComplaintsAction extends BaseAction {
             map.put("status", status);
         }
 
-        String visdate=null;
-        String viedate=null;
+        String visdate = null;
+        String viedate = null;
 
-        if(status != null && status==0){
-            sDate=sDate+"-01";
-            DateUtil dateUtil=new DateUtil();
-            Date date=DateUtil.parseStrDate(sDate);
-            String month=dateUtil.getThisMonthDate(date);
-            visdate=month.split(",")[0];
-            viedate=month.split(",")[1];
+        if (status != null && status == 0) {
+            sDate = sDate + "-01";
+            DateUtil dateUtil = new DateUtil();
+            Date date = DateUtil.parseStrDate(sDate);
+            String month = dateUtil.getThisMonthDate(date);
+            visdate = month.split(",")[0];
+            viedate = month.split(",")[1];
         }
         // 查询type类型的总数
         int typeCount = crmComplaintsTypeService.getCount();
@@ -148,14 +149,14 @@ public class CrmComplaintsAction extends BaseAction {
             }
         }
         JSONObject json = new JSONObject();
-        if (formatList.size()>0) {
+        if (formatList.size() > 0) {
             json.put("code", 200);
             json.put("msg", formatList);
             json.put("typeCount", typeCount);
             json.put("name", name);
-            if(status==0){
-                json.put("visdate",visdate);
-                json.put("viedate",viedate);
+            if (status == 0) {
+                json.put("visdate", visdate);
+                json.put("viedate", viedate);
             }
             ResponseUtil.writeJson(response, json.toJSONString());
         } else {
@@ -173,7 +174,6 @@ public class CrmComplaintsAction extends BaseAction {
         try {
             date = sf.parse(dateStr);
         } catch (Exception var4) {
-            ;
         }
 
         return date;
@@ -186,7 +186,6 @@ public class CrmComplaintsAction extends BaseAction {
         try {
             date = sf.parse(dateStr);
         } catch (Exception var4) {
-            ;
         }
 
         return date;
