@@ -46,6 +46,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>采购送货单页面</title>
+    <link href="<%=basePath%>resources/plugin/bootstrap3.3.2/css/bootstrap.min.css" rel="stylesheet" />
     <link href="<%=basePath%>resources/css/system.css" rel="stylesheet" type="text/css"/>
     <script src="<%=basePath%>resources/js/jquery.min.js" type="text/javascript"></script>
     <style>
@@ -64,7 +65,6 @@
             font-family: "宋体";
             font-weight: bold;
         }
-
         .inline {
             float: left;
             margin: 0 20px;
@@ -80,31 +80,18 @@
             margin-bottom: 10px;
         }
 
-        .container {
+        .box {
             width: 800px;
-            margin: 100px auto;
+            margin: 50px auto;
         }
 
         .info-p1 {
             margin: 4px 0;
         }
 
-        .table {
-            width: 100%;
-            max-width: 100%;
+        .table>thead>tr>th,.table>tbody>tr>td{
             text-align: center;
-            border: 1px solid #000;
-            border-spacing: 0;
-            border-collapse: collapse;
-            padding: 0 20px;
-        }
-
-        th {
-            padding: 10px;
-        }
-
-        td {
-            padding: 5px;
+            border-bottom: 1px solid #000 !important;
         }
 
         .foot-p1 {
@@ -132,7 +119,7 @@
             <li>送货单</li>
         </ul>
     </div>
-    <div class="container">
+    <div class="box">
         <div class="header">
             <div class="title">
                 <div class="inline" style="width: 200px; height: 78px;">
@@ -188,7 +175,7 @@
                         <td>${item.snumber}</td>
                         <td>${item.type}</td>
                         <td>${item.stock_info_id}</td>
-                        <td>${item.title}</td>
+                        <td>${item.name}</td>
                         <td class="num">${item.num}</td>
                         <td>${item.price}</td>
                         <td class="countPrice">
