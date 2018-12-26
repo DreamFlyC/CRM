@@ -211,7 +211,6 @@ public class CrmPurchacseAction extends BaseAction{
 	 */
 	@RequestMapping(value = "/showitem")
 	public String showItem(String number){
-		System.out.println("number:"+number);
 		return "redirect:/manage/crmpurchacseitem.html?number="+number;
 	}
 

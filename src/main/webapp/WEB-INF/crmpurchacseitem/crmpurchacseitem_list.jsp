@@ -50,7 +50,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				text-align: center;
 			}
 		</style>
-	</head>
+	</head
 	<body>
 		<%@ include file="../top.jsp"%>
    		<%@ include file="../left.jsp"%>

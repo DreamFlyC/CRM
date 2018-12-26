@@ -158,6 +158,7 @@ table thead tr th, table tbody tr td {
 								<td >
 									<a href="manage/crmpurchacse/${crmPurchacse.id}.html">修改订单</a>
 									<a href="manage/crmpurchacse/showitem.html?number=${crmPurchacse.number}">查看明细</a>
+									<a href="manage/crmpurchacseitem/delivery/${crmPurchacse.id}.html">生成送货单</a>
 								</td>
 							</tr>
 						</c:forEach>
