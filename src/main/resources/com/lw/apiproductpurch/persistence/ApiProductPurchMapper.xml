@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.apiproductpurch.persistence.ApiProductPurchMapper">
+  <resultMap id="BaseResultMap" type="ApiProductPurch">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="client_customerid" jdbcType="VARCHAR" property="clientCustomerid"/>
+    <result column="client_db" jdbcType="VARCHAR" property="clientDb"/>
+    <result column="messageid" jdbcType="VARCHAR" property="messageid"/>
+    <result column="apptoken" jdbcType="VARCHAR" property="apptoken"/>
+    <result column="appkey" jdbcType="VARCHAR" property="appkey"/>
+    <result column="sign" jdbcType="VARCHAR" property="sign"/>
+    <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp"/>
+    <result column="data" jdbcType="VARCHAR" property="data"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id,
+    client_customerid,
+    client_db,
+    messageid,
+    apptoken,
+    appkey,
+    sign,
+    `timestamp`,
+    `data`
+  </sql>
+  <select id="getList" parameterType="map" resultMap="BaseResultMap">
+    select *
+    from api_product_purch
+    order by id desc
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+  <select id="getCount" resultType="int" parameterType="String">
+    select count(1)
+    from api_product_purch
+  </select>
+  <select id="getById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from api_product_purch
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="delById" parameterType="java.lang.Integer">
+    delete
+    from api_product_purch
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="ApiProductPurch"
+          useGeneratedKeys="true">
+    insert into api_product_purch
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clientCustomerid != null">
+        client_customerid,
+      </if>
+      <if test="clientDb != null">
+        client_db,
+      </if>
+      <if test="messageid != null">
+        messageid,
+      </if>
+      <if test="apptoken != null">
+        apptoken,
+      </if>
+      <if test="appkey != null">
+        appkey,
+      </if>
+      <if test="sign != null">
+        sign,
+      </if>
+        `timestamp`,
+      <if test="data != null">
+        `data`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clientCustomerid != null">
+        #{clientCustomerid,jdbcType=VARCHAR},
+      </if>
+      <if test="clientDb != null">
+        #{clientDb,jdbcType=VARCHAR},
+      </if>
+      <if test="messageid != null">
+        #{messageid,jdbcType=VARCHAR},
+      </if>
+      <if test="apptoken != null">
+        #{apptoken,jdbcType=VARCHAR},
+      </if>
+      <if test="appkey != null">
+        #{appkey,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      now(),
+      <if test="data != null">
+        #{data,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="editById" parameterType="ApiProductPurch">
+    update api_product_purch
+    <set>
+      <if test="clientCustomerid != null">
+        client_customerid = #{clientCustomerid,jdbcType=VARCHAR},
+      </if>
+      <if test="clientDb != null">
+        client_db = #{clientDb,jdbcType=VARCHAR},
+      </if>
+      <if test="messageid != null">
+        messageid = #{messageid,jdbcType=VARCHAR},
+      </if>
+      <if test="apptoken != null">
+        apptoken = #{apptoken,jdbcType=VARCHAR},
+      </if>
+      <if test="appkey != null">
+        appkey = #{appkey,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null">
+        `data` = #{data,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

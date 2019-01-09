@@ -10,10 +10,7 @@
 	</settings>
 	 <typeAliases>
 	 	
-		<typeAlias type="com.lw.adpic.entity.Adpic" alias="Adpic"/>
-		<typeAlias type="com.lw.aliyunmonitoossinfo.entity.AliyunMonitoOssinfo" alias="AliyunMonitoOssinfo"/>
-		<typeAlias type="com.lw.aliyunmonitordsinfo.entity.AliyunMonitoRdsinfo" alias="AliyunMonitoRdsinfo"/>
-		
+
 		<typeAlias type="com.lw.crm.crm.entity.Crm" alias="Crm"/>
 		<typeAlias type="com.lw.crm.crmbusiness.entity.CrmBusiness" alias="CrmBusiness"/>
 		<typeAlias type="com.lw.crm.crmbuyinfo.entity.CrmBuyInfo" alias="CrmBuyInfo"/>
@@ -41,25 +38,6 @@
 		<typeAlias type="com.lw.crm.complaintstype.entity.CrmComplaintsType" alias="CrmComplaintsType"/>
 		<typeAlias type="com.lw.crm.crmreceipttype.entity.CrmReceiptType" alias="CrmReceiptType" />
 		 
-		 
-		 <typeAlias type="com.lw.cms.bnarticlealbums.entity.BnArticleAlbums" alias="BnArticleAlbums"/>
-		<typeAlias type="com.lw.cms.bnarticledownload.entity.BnArticleDownload" alias="BnArticleDownload"/>
-		<typeAlias type="com.lw.cms.bnarticlediggs.entity.BnArticleDiggs" alias="BnArticleDiggs"/>
-		<typeAlias type="com.lw.cms.bnattributes.entity.BnAttributes" alias="BnAttributes"/>
-		<typeAlias type="com.lw.cms.bnusercode.entity.BnUserCode" alias="BnUserCode"/>
-		<typeAlias type="com.lw.cms.bnuserloginlog.entity.BnUserLoginLog" alias="BnUserLoginLog"/>
-		<typeAlias type="com.lw.cms.bnusermessage.entity.BnUserMessage" alias="BnUserMessage"/>
-		<typeAlias type="com.lw.cms.bnmanager.entity.BnManager" alias="BnManager"/>
-		<typeAlias type="com.lw.cms.bnmanagerlog.entity.BnManagerLog" alias="BnManagerLog"/>
-		<typeAlias type="com.lw.cms.bnfeedback.entity.BnFeedBack" alias="BnFeedBack"/>
-		<typeAlias type="com.lw.cms.bndistribution.entity.BnDistribution" alias="BnDistribution"/>
-		<typeAlias type="com.lw.cms.bndownloadattach.entity.BnDownloadAttach" alias="BnDownloadAttach"/>
-		<typeAlias type="com.lw.cms.bnlink.entity.BnLink" alias="BnLink"/>
-		<typeAlias type="com.lw.cms.bnmanagerrolevalue.entity.BnManagerRoleValue" alias="BnManagerRoleValue"/>
-		
-		<typeAlias type="com.lw.dingtalkmsg.entity.Dingtalkmsg" alias="Dingtalkmsg"/> 
-		<typeAlias type="com.lw.dingtalkrecord.entity.DingtalkRecord" alias="DingtalkRecord"/> 
-		
 		<typeAlias type="com.lw.duty.entity.Duty" alias="Duty"/>
 		<typeAlias type="com.lw.duty.entity.DutyDepart" alias="DutyDepart"/>
 		<typeAlias type="com.lw.duty.entity.DutyGroup" alias="DutyGroup"/>
@@ -69,37 +47,13 @@
 		<typeAlias type="com.lw.duty.entity.DutyUserLastTime" alias="DutyUserLastTime"/> 
 		<typeAlias type="com.lw.duty.entity.FeedBack" alias="FeedBack"/>  
 		
-		<typeAlias type="com.lw.newsinfo.entity.NewsInfo" alias="NewsInfo"/>
-		
-		<typeAlias type="com.lw.toabbslog.entity.ToaBbsLog" alias="ToaBbsLog"/>
-		
-		<typeAlias type="com.lw.traceabilitypoint.entity.TraceabilityPoint" alias="TraceabilityPoint"/>
-		<typeAlias type="com.lw.traceabilitytype.entity.TraceabilityType" alias="TraceabilityType"/> 
-		
-		<typeAlias type="com.lw.redpackage.entity.RedPackage" alias="RedPackage"/> 
-		<typeAlias type="com.lw.redpackage.entity.UserRedPackage" alias="UserRedPackage"/> 
-		
+
 		<typeAlias type="com.lw.weixin.users.entity.Users" alias="Users"/>
-		<typeAlias type="com.lw.yiminews.entity.YimiNews" alias="YimiNews"/>
-		
+
 		<typeAlias type="com.lw.shiroaction.model.entity.ShiroActionModel" alias="ShiroActionModel"/>
 		<typeAlias type="com.lw.shiroaction.rolevalue.entity.ShiroActionRoleValue" alias="ShiroActionRoleValue"/>
 		<typeAlias type="com.lw.shiroaction.usersgroup.entity.ShiroActionUsersGroup" alias="ShiroActionUsersGroup"/>
 	
-		<typeAlias type="com.lw.restaurantsoftinfo.entity.RestaurantSoftInfo" alias="RestaurantSoftInfo"/>
-		
-		<typeAlias type="com.lw.foodinfotype.entity.FoodInfoType" alias="FoodInfoType"/>
-		<typeAlias type="com.lw.foodsetmealitem.entity.FoodSetMealItem" alias="FoodSetMealItem"/>
-		<typeAlias type="com.lw.foodsetmealitemtype.entity.FoodSetMealItemType" alias="FoodSetMealItemType"/>
-		
-		<typeAlias type="com.lw.sysmobmsnaccount.entity.SysMobmsnAccount" alias="SysMobmsnAccount"/>
-		
-		<typeAlias type="com.lw.kitchendevice.entity.KitchenDevice" alias="KitchenDevice"/>
-		<typeAlias type="com.lw.kitcheninfo.entity.KitchenInfo" alias="KitchenInfo"/>
-		
-		<typeAlias type="com.lw.qaquestion.entity.QaQuestion" alias="QaQuestion"/>
-		
-		<typeAlias type="com.lw.tpartnerbasicinfo.entity.TPartnerBasicInfo" alias="TPartnerBasicInfo"/>
 
 	</typeAliases> 
 	<!-- Mybatis 全局配置 end -->
