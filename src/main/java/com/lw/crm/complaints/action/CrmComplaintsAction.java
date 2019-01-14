@@ -82,7 +82,7 @@ public class CrmComplaintsAction extends BaseAction {
     }
 
     /*
-     * create by:  WH
+     * create by:  CZP
      * description: 投诉统计  type:0--默认 1--天  2--月 3--年
      * create time: 16:58 2018/11/28
      * @Param: null
@@ -91,7 +91,8 @@ public class CrmComplaintsAction extends BaseAction {
     @RequestMapping(value = "/Listtongji", method = RequestMethod.POST)
     @ResponseBody
     public JsonMsgStatusEntity getListTongJi(HttpServletResponse response, @RequestParam(value = "sDate", required = false) String sDate,
-                                             @RequestParam(value = "status", defaultValue = "0") Integer status, @RequestParam(value = "eDate", required = false) String eDate) {
+                                             @RequestParam(value = "status", defaultValue = "0") Integer status,
+                                             @RequestParam(value = "eDate", required = false) String eDate) {
         Map<String, Object> map = new HashMap<>();
         if (sDate != null) {
             map.put("sDate", sDate);
@@ -160,7 +161,7 @@ public class CrmComplaintsAction extends BaseAction {
             }
             ResponseUtil.writeJson(response, json.toJSONString());
         } else {
-            json.put("code", 200);
+            json.put("code", 404);
             json.put("msg", "没有数据");
             ResponseUtil.writeJson(response, json.toJSONString());
         }

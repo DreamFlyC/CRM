@@ -279,7 +279,6 @@ public class CrmStockAction extends BaseAction {
     public JsonMsgStatusEntity getStatistics(@RequestParam(value = "type",required = false) String[] type, HttpServletResponse response,
                                              @RequestParam(value = "sDate",required = false)String sDate,
                                              @RequestParam(value = "eDate",required = false)String eDate){
-        log.info("进入方法了！！！");
         Map<String,Object> map=new HashMap<>(3);
         if(ArrayUtils.isNotEmpty(type)){
             map.put("type",type);

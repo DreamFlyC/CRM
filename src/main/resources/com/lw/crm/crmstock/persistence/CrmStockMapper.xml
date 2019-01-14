@@ -1,287 +1,289 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lw.crm.crmstock.persistence.CrmStockMapper">
-<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
-<parameterMap type="CrmStock" id="CrmStockparaMap">
-<parameter property="id" resultMap="id" />
-<parameter property="stocknum" resultMap="stocknum" />
-		<parameter property="pid" resultMap="pid" />
-		<parameter property="unit" resultMap="unit" jdbcType="VARCHAR" />
-		<parameter property="type" resultMap="type" />
-		<parameter property="number" resultMap="number" />
-		<parameter property="date" resultMap="date" />
-		<parameter property="uid" resultMap="uid" />
-		<parameter property="price" resultMap="price"/>
-		<parameter property="title" resultMap="title"/>
-		<parameter property="sid" resultMap="sid"/>
-		<parameter property="seq" resultMap="seq" />
-		<parameter property="snumber" resultMap="snumber" />
-		<parameter property="stock_info_id" resultMap="stock_info_id" />
-</parameterMap>
-<resultMap type="CrmStock" id="CrmStockResultMap">
-		<id property="id" column="id" />
-		<result property="stocknum" column="stocknum" />
-		<result property="pid" column="pid" />
-		<result property="unit" column="unit" jdbcType="VARCHAR" />
-		<result property="type" column="type" />
-		<result property="number" column="number" />
-		<result property="date" column="date" />
-		<result property="uid" column="uid" />
-		<result property="price" column="price"/>
-		<result property="title" column="title"/>
-		<result property="sid" column="sid"/>
-		<result property="seq" column="seq" />
-		<result property="snumber" column="snumber" />
-        <result property="stock_info_id" column="stock_info_id" />
-		<association property="crmProduct" fetchType="lazy" column="pid" select="com.lw.crm.crmproduct.persistence.CrmProductMapper.getById"></association>
-		<association property="crmName" fetchType="lazy" column="type" select="com.lw.crm.crmname.persistence.CrmNameMapper.getById"></association>
-		<!--<association property="crmUnit" fetchType="lazy" column="unit" select="com.lw.crm.crmunit.persistence.CrmUnitMapper.getById"></association>-->
-		<association property="crmSupplier" fetchType="lazy" column="sid" select="com.lw.crm.crmsupplier.persistence.CrmSupplierMapper.getById"></association>
-	</resultMap>
-	
-	<sql id="CrmStockColumn">id,stocknum,pid,type,number,date,uid,price,title,sid,snumber,unit,stock_info_id</sql>
-	
-	<!--查询信息总条数 -->
-	<select id="getCount" resultType="int" parameterType="map">
-		select count(1) as total from crm_stock
-		<where>
-			<if test="keyword != null and keyword != ''">
-				<bind name="pattern1" value="'%' + keyword + '%'" />
-				or title LIKE #{pattern1}
-			</if>
-			<if test="keyword != null and keyword != ''">
-				<bind name="pattern2" value="'%' + keyword + '%'" />
-				or number LIKE #{pattern2}
-			</if>
-			<if test="keyword != null and keyword != ''">
-				<bind name="pattern3" value="'%' + keyword + '%'" />
-				or snumber LIKE #{pattern3}
-			</if>
-			<if test="sid != null and sid != ''">
-				AND sid =#{sid}
-			</if>
-			<if test="snumber != null and snumber != ''">
-				AND snumber =#{snumber}
-			</if>
-			<if test="sids != null and sids != ''">
-				AND sid in
-				<foreach item="sidItem" collection="sids" open="(" separator=","
-				close=")">
-				#{sidItem}
-			</foreach>
-			</if>
-			<if test="id != null and id != ''">
-				and id=#{id} 
-			</if>
-			<if test="ids != null and ids != ''">
-			and id in
-			<foreach item="CrmItem" collection="ids" open="(" separator=","
-				close=")">
-				#{CrmItem}
-			</foreach>
-		</if>
-		</where>
-	</select>
-	
-	<!--新建任务（save）方法 -->
-	<insert id="save" parameterType="CrmStock"
-		keyColumn="id" useGeneratedKeys="true">
-   		insert into crm_stock 
-   		<trim prefix="(" suffix=")" suffixOverrides=",">
-    			<if test="pid != null and pid != ''">
-    			 	pid,
-    			</if>
-    			<if test="number != null and number != ''">
-    			 	number,
-    			</if>
-    			<if test="type != null and type != ''">
-    			 	type,
-    			</if>
-    			<if test="stocknum != null and stocknum != ''">
-    			 	stocknum,
-    			</if>
-    			<if test="uid != null and uid != ''">
-    			 	uid,
-    			</if>
-    			<if test="price != null and price != ''">
-    			 	price,
-    			</if>
-    			<if test="title != null and title != ''">
-    			 	title,
-    			</if>
-    			<if test="unit != null and unit != ''">
-    			 	unit,
-    			</if>
-    			<if test="sid != null and sid != ''">
-    			 	sid,
-    			</if>
-    			<if test="snumber != null and snumber != ''">
-    			 	snumber,
-    			</if>
-    			date
-    		</trim>
-	    <trim prefix="values(" suffix=")" suffixOverrides=",">
-            	<if test="pid != null and pid != ''">
-    			 	#{pid},
-    			</if>
-    			<if test="number != null and number != ''">
-    			 	#{number},
-    			</if>
-    			<if test="type != null and type != ''">
-    			 	#{type},
-    			</if>
-    			<if test="stocknum != null and stocknum != ''">
-    			 	#{stocknum},
-    			</if>
-    			<if test="uid != null and uid != ''">
-    			 	#{uid},
-    			</if>
-    			<if test="price != null and price != ''">
-    			 	#{price},
-    			</if>
-    			<if test="title != null and title != ''">
-    			 	#{title},
-    			</if>
-    			<if test="unit != null and unit != ''">
-    			 	#{unit},
-    			</if>
-    			<if test="sid != null and sid != ''">
-    			 	#{sid},
-    			</if>
-    			<if test="snumber != null and snumber != ''">
-    			 	#{snumber},
-    			</if>
-    			now()
-            </trim>		
-	</insert>
-	
-	
-	
-	<!-- 根据id查询所有信息 -->
-	<select id="getList" parameterType="map" useCache="false"
-		resultMap="CrmStockResultMap">
-		select
-		<include refid="CrmStockColumn" />
-		from  crm_stock 
-		<where>
-			<if test="keyword != null and keyword != ''">
-				<bind name="pattern1" value="'%' + keyword + '%'" />
-				or title LIKE #{pattern1}
-			</if>
-			<if test="keyword != null and keyword != ''">
-				<bind name="pattern2" value="'%' + keyword + '%'" />
-				or number LIKE #{pattern2}
-			</if>
-			<if test="keyword != null and keyword != ''">
-				<bind name="pattern3" value="'%' + keyword + '%'" />
-				or snumber LIKE #{pattern3}
-			</if>
-			<if test="sid != null and sid != ''">
-				AND sid =#{sid}
-			</if>
-			<if test="sids != null and sids != ''">
-				AND sid in
-				<foreach item="sidItem" collection="sids" open="(" separator=","
-				close=")">
-				#{sidItem}
-			</foreach>
-			</if>
-			<if test="id != null and id != ''">
-				and id=#{id} 
-			</if>
-			<if test="ids != null and ids != ''">
-				and id in
-				<foreach item="CrmItem" collection="ids" open="(" separator=","
-					close=")">
-					#{CrmItem}
-				</foreach>
-			</if>
-		</where>
-		order by id desc
-		<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
-	</select>
-	
-	<!--getById  -->
-	<select id="getById" resultMap="CrmStockResultMap"
-		parameterType="CrmStock">
-	    select
-		<include refid="CrmStockColumn" />
-		from  crm_stock 
-		 where id=#{_parameter} 
-	</select>
-	
-	<!--清理数据 -->
-	<!-- 批量删除任务信息 -->
-	<delete id="delete" parameterType="int">
-		delete from crm_stock where id in
-		<foreach item="crmItem" collection="array" open="("
-			separator="," close=")">
-			#{crmItem}
-		</foreach>
-	</delete>
-	
-	<!--修改  -->
-	<update id="editById">
-	update 
-	crm_stock
-		<set>
-			<if test="stocknum != null and stocknum!=''">
-				stocknum = #{stocknum},
-			</if>
-			<if test=" type != null and type !=''">
-					type = #{type},
-			</if>
-			<if test=" price != null and price !=''">
-					price = #{price},
-			</if>
-			<if test=" unit != null and unit !=''">
-				  unit = #{unit},
-			</if>
-			<if test=" sid != null and sid !=''">
-				  sid = #{sid},
-			</if>
-			<if test=" snumber != null and snumber !=''">
-				  snumber = #{snumber}
-			</if>
-		</set>
-		WHERE 1=1 
-		<if test="id != null and id!=''">
-			and	id = #{id}
-		</if>
-		<if test=" sid != null and sid !=''">
-			and	  sid = #{sid}
-		</if>
-		<if test=" snumber != null and snumber !=''">
-			and  snumber = #{snumber}
-		</if>
-	</update>
-	
-	<select id="getStockBySidAndSnumber" parameterType="int" resultMap="CrmStockResultMap">
-		select count(1) from crm_stock where sid = #{sid} and snumber = #{snumber}
-	</select>
-	
-	<select id="getStatisticsByType" parameterType="map" resultMap="CrmStockResultMap">
-		select sum(stocknum) as stocknum,type from crm_stock
-		<where>
-			<if test="type !=null and type !=''">
-				and type in
-                <foreach item="crmItem" collection="type" open="("
-                         separator="," close=")">
-                    #{crmItem}
-                </foreach>
-			</if>
-			<if test="sDate!=null and sDate != ''">
-				<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+  <parameterMap type="CrmStock" id="CrmStockparaMap">
+    <parameter property="id" resultMap="id"/>
+    <parameter property="stocknum" resultMap="stocknum"/>
+    <parameter property="pid" resultMap="pid"/>
+    <parameter property="unit" resultMap="unit" jdbcType="VARCHAR"/>
+    <parameter property="type" resultMap="type"/>
+    <parameter property="number" resultMap="number"/>
+    <parameter property="date" resultMap="date"/>
+    <parameter property="uid" resultMap="uid"/>
+    <parameter property="price" resultMap="price"/>
+    <parameter property="title" resultMap="title"/>
+    <parameter property="sid" resultMap="sid"/>
+    <parameter property="seq" resultMap="seq"/>
+    <parameter property="snumber" resultMap="snumber"/>
+    <parameter property="stock_info_id" resultMap="stock_info_id"/>
+  </parameterMap>
+  <resultMap type="CrmStock" id="CrmStockResultMap">
+    <id property="id" column="id"/>
+    <result property="stocknum" column="stocknum"/>
+    <result property="pid" column="pid"/>
+    <result property="unit" column="unit" jdbcType="VARCHAR"/>
+    <result property="type" column="type"/>
+    <result property="number" column="number"/>
+    <result property="date" column="date"/>
+    <result property="uid" column="uid"/>
+    <result property="price" column="price"/>
+    <result property="title" column="title"/>
+    <result property="sid" column="sid"/>
+    <result property="seq" column="seq"/>
+    <result property="snumber" column="snumber"/>
+    <result property="stock_info_id" column="stock_info_id"/>
+    <association property="crmProduct" fetchType="lazy" column="pid"
+                 select="com.lw.crm.crmproduct.persistence.CrmProductMapper.getById"></association>
+    <association property="crmName" fetchType="lazy" column="type"
+                 select="com.lw.crm.crmname.persistence.CrmNameMapper.getById"></association>
+    <!--<association property="crmUnit" fetchType="lazy" column="unit" select="com.lw.crm.crmunit.persistence.CrmUnitMapper.getById"></association>-->
+    <association property="crmSupplier" fetchType="lazy" column="sid"
+                 select="com.lw.crm.crmsupplier.persistence.CrmSupplierMapper.getById"></association>
+  </resultMap>
+
+  <sql id="CrmStockColumn">id,stocknum,pid,type,number,date,uid,price,title,sid,snumber,unit,stock_info_id</sql>
+
+  <!--查询信息总条数 -->
+  <select id="getCount" resultType="int" parameterType="map">
+    select count(1) as total from crm_stock
+    <where>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern1" value="'%' + keyword + '%'"/>
+        or title LIKE #{pattern1}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern2" value="'%' + keyword + '%'"/>
+        or number LIKE #{pattern2}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern3" value="'%' + keyword + '%'"/>
+        or snumber LIKE #{pattern3}
+      </if>
+      <if test="sid != null and sid != ''">
+        AND sid =#{sid}
+      </if>
+      <if test="snumber != null and snumber != ''">
+        AND snumber =#{snumber}
+      </if>
+      <if test="sids != null and sids != ''">
+        AND sid in
+        <foreach item="sidItem" collection="sids" open="(" separator=","
+                 close=")">
+          #{sidItem}
+        </foreach>
+      </if>
+      <if test="id != null and id != ''">
+        and id=#{id}
+      </if>
+      <if test="ids != null and ids != ''">
+        and id in
+        <foreach item="CrmItem" collection="ids" open="(" separator=","
+                 close=")">
+          #{CrmItem}
+        </foreach>
+      </if>
+    </where>
+  </select>
+
+  <!--新建任务（save）方法 -->
+  <insert id="save" parameterType="CrmStock"
+          keyColumn="id" useGeneratedKeys="true">
+    insert into crm_stock
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pid != null and pid != ''">
+        pid,
+      </if>
+      <if test="number != null and number != ''">
+        number,
+      </if>
+      <if test="type != null and type != ''">
+        type,
+      </if>
+      <if test="stocknum != null and stocknum != ''">
+        stocknum,
+      </if>
+      <if test="uid != null and uid != ''">
+        uid,
+      </if>
+      <if test="price != null and price != ''">
+        price,
+      </if>
+      <if test="title != null and title != ''">
+        title,
+      </if>
+      <if test="unit != null and unit != ''">
+        unit,
+      </if>
+      <if test="sid != null and sid != ''">
+        sid,
+      </if>
+      <if test="snumber != null and snumber != ''">
+        snumber,
+      </if>
+      date
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides=",">
+      <if test="pid != null and pid != ''">
+        #{pid},
+      </if>
+      <if test="number != null and number != ''">
+        #{number},
+      </if>
+      <if test="type != null and type != ''">
+        #{type},
+      </if>
+      <if test="stocknum != null and stocknum != ''">
+        #{stocknum},
+      </if>
+      <if test="uid != null and uid != ''">
+        #{uid},
+      </if>
+      <if test="price != null and price != ''">
+        #{price},
+      </if>
+      <if test="title != null and title != ''">
+        #{title},
+      </if>
+      <if test="unit != null and unit != ''">
+        #{unit},
+      </if>
+      <if test="sid != null and sid != ''">
+        #{sid},
+      </if>
+      <if test="snumber != null and snumber != ''">
+        #{snumber},
+      </if>
+      now()
+    </trim>
+  </insert>
+
+
+  <!-- 根据id查询所有信息 -->
+  <select id="getList" parameterType="map" useCache="false"
+          resultMap="CrmStockResultMap">
+    select
+    <include refid="CrmStockColumn"/>
+    from crm_stock
+    <where>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern1" value="'%' + keyword + '%'"/>
+        or title LIKE #{pattern1}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern2" value="'%' + keyword + '%'"/>
+        or number LIKE #{pattern2}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern3" value="'%' + keyword + '%'"/>
+        or snumber LIKE #{pattern3}
+      </if>
+      <if test="sid != null and sid != ''">
+        AND sid =#{sid}
+      </if>
+      <if test="sids != null and sids != ''">
+        AND sid in
+        <foreach item="sidItem" collection="sids" open="(" separator=","
+                 close=")">
+          #{sidItem}
+        </foreach>
+      </if>
+      <if test="id != null and id != ''">
+        and id=#{id}
+      </if>
+      <if test="ids != null and ids != ''">
+        and id in
+        <foreach item="CrmItem" collection="ids" open="(" separator=","
+                 close=")">
+          #{CrmItem}
+        </foreach>
+      </if>
+    </where>
+    order by id desc
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+
+  <!--getById  -->
+  <select id="getById" resultMap="CrmStockResultMap"
+          parameterType="CrmStock">
+    select
+    <include refid="CrmStockColumn"/>
+    from crm_stock
+    where id=#{_parameter}
+  </select>
+
+  <!--清理数据 -->
+  <!-- 批量删除任务信息 -->
+  <delete id="delete" parameterType="int">
+    delete from crm_stock where id in
+    <foreach item="crmItem" collection="array" open="("
+             separator="," close=")">
+      #{crmItem}
+    </foreach>
+  </delete>
+
+  <!--修改  -->
+  <update id="editById">
+    update
+    crm_stock
+    <set>
+      <if test="stocknum != null and stocknum!=''">
+        stocknum = #{stocknum},
+      </if>
+      <if test=" type != null and type !=''">
+        type = #{type},
+      </if>
+      <if test=" price != null and price !=''">
+        price = #{price},
+      </if>
+      <if test=" unit != null and unit !=''">
+        unit = #{unit},
+      </if>
+      <if test=" sid != null and sid !=''">
+        sid = #{sid},
+      </if>
+      <if test=" snumber != null and snumber !=''">
+        snumber = #{snumber}
+      </if>
+    </set>
+    WHERE 1=1
+    <if test="id != null and id!=''">
+      and id = #{id}
+    </if>
+    <if test=" sid != null and sid !=''">
+      and sid = #{sid}
+    </if>
+    <if test=" snumber != null and snumber !=''">
+      and snumber = #{snumber}
+    </if>
+  </update>
+
+  <select id="getStockBySidAndSnumber" parameterType="int" resultMap="CrmStockResultMap">
+    select count(1) from crm_stock where sid = #{sid} and snumber = #{snumber}
+  </select>
+
+  <select id="getStatisticsByType" parameterType="map" resultMap="CrmStockResultMap">
+    select sum(stocknum) as stocknum,type from crm_stock
+    <where>
+      <if test="type !=null and type !=''">
+        and type in
+        <foreach item="crmItem" collection="type" open="("
+                 separator="," close=")">
+          #{crmItem}
+        </foreach>
+      </if>
+      <if test="sDate!=null and sDate != ''">
+        <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
 			 DATE_FORMAT(#{sDate} , '%Y-%m-%d') ]]>
-			</if>
-			<if test="eDate!=null and eDate != ''">
-				<![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <=
+      </if>
+      <if test="eDate!=null and eDate != ''">
+        <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <=
 			 DATE_FORMAT(#{eDate} , '%Y-%m-%d ') ]]>
-			</if>
-		</where>
-		group by type
-	</select>
-	
+      </if>
+    </where>
+    group by type
+  </select>
+
 </mapper>
 

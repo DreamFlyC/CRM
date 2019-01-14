@@ -172,7 +172,7 @@
 		  SELECT count(1) as num,type,DATE_FORMAT(date,'%Y-%m-%d')as date
 		  from crm_complaints where 1=1
 			  <if test="status!=null and status==0">
-				  /* 默认查询*/
+					<!--默认查询-->
 				  <if test="sDate !=null and sDate != ''">
 					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m') >=
 			  		 	#{sDate}  ]]>
@@ -183,7 +183,7 @@
 				  </if>
 			  </if>
 			  <if test="status!=null and status==1">
-				  /* 按天查询*/
+					<!--按天查询-->
 				  <if test="sDate !=null and sDate != ''">
 					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d') >=
 			  		 	#{sDate}  ]]>
@@ -194,7 +194,7 @@
 				  </if>
 			  </if>
 			  <if test="status!=null and status==2">
-				  /* 按月查询*/
+					<!--按月查询-->
 				  <if test="sDate !=null and sDate != ''">
 					  <![CDATA[ and DATE_FORMAT(date, '%Y-%m') >=
 			  		 	#{sDate}  ]]>
@@ -205,7 +205,7 @@
 				  </if>
 			  </if>
 			  <if test="status!=null and status==3">
-				  /* 按年查询*/
+					<!--按年查询-->
 				  <if test="sDate !=null and sDate != ''">
 					  <![CDATA[ and DATE_FORMAT(date, '%Y') >=
 			  		  #{sDate}  ]]>
