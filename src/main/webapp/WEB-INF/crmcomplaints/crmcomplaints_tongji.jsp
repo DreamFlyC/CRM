@@ -419,21 +419,6 @@
         submitChangeMonth(2, year + "-01", year + "-12");
         //查询年份
         submitChangeYear(3, year, year);
-
-
-        window.addEventListener("resize", function () {
-            var myChart = echarts.getInstanceByDom(document.getElementById("main"));
-            myChart.resize();
-        });
-        window.addEventListener("resize", function () {
-            var myChart = echarts.getInstanceByDom(document.getElementById("mainMonth"));
-            myChart.resize();
-        });
-        window.addEventListener("resize", function () {
-            var myChart = echarts.getInstanceByDom(document.getElementById("mainYear"));
-            myChart.resize();
-        });
-
     });
 </script>
 
