@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.devicescreen.persistence.DeviceScreenMapper">
+  <resultMap id="BaseResultMap" type="com.lw.devicescreen.entity.DeviceScreen">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="series_no" jdbcType="VARCHAR" property="seriesNo" />
+    <result column="imgurl" jdbcType="VARCHAR" property="imgurl" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, series_no, imgurl, `type`, `status`, add_time
+  </sql>
+  <select id="getById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from device_screen
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="delById">
+    delete from  device_screen where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.lw.devicescreen.entity.DeviceScreen" useGeneratedKeys="true">
+    insert into device_screen
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="seriesNo != null">
+        series_no,
+      </if>
+      <if test="imgurl != null">
+        imgurl,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+        add_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="seriesNo != null">
+        #{seriesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null">
+        #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      now()
+    </trim>
+  </insert>
+  <update id="editById" parameterType="com.lw.devicescreen.entity.DeviceScreen">
+    update device_screen
+    <set>
+      <if test="seriesNo != null">
+        series_no = #{seriesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imgurl != null">
+        imgurl = #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getList" resultMap="BaseResultMap" parameterType="map">
+select <include refid="Base_Column_List"/> from device_screen
+</select>
+<select id="getCount" resultType="int">
+select count(1) from device_screen
+</select>
+    </mapper>

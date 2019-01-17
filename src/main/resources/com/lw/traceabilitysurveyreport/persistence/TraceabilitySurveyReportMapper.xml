@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.traceabilitysurveyreport.persistence.TraceabilitySurveyReportMapper">
+  <resultMap id="BaseResultMap" type="com.lw.traceabilitysurveyreport.entity.TraceabilitySurveyReport">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="type" jdbcType="INTEGER" property="type"/>
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+    <result column="code_number" jdbcType="VARCHAR" property="codeNumber"/>
+    <result column="producer_id" jdbcType="INTEGER" property="producerId"/>
+    <result column="purchaser_id" jdbcType="INTEGER" property="purchaserId"/>
+    <result column="status" jdbcType="INTEGER" property="status"/>
+    <result column="make_date" jdbcType="DATE" property="makeDate"/>
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+             type="com.lw.traceabilitysurveyreport.entity.TraceabilitySurveyReport">
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id,
+    user_id,
+    `type`,
+    add_time,
+    code_number,
+    producer_id,
+    purchaser_id,
+    `status`,
+    make_date
+  </sql>
+  <sql id="Blob_Column_List">
+    remark
+  </sql>
+  <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>
+    ,
+    <include refid="Blob_Column_List"/>
+    from traceability_survey_report
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="delById">
+    delete from  traceability_survey_report where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id"
+          parameterType="com.lw.traceabilitysurveyreport.entity.TraceabilitySurveyReport" useGeneratedKeys="true">
+    insert into traceability_survey_report
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      add_time,
+      <if test="codeNumber != null">
+        code_number,
+      </if>
+      <if test="producerId != null">
+        producer_id,
+      </if>
+      <if test="purchaserId != null">
+        purchaser_id,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="makeDate != null">
+        make_date,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      now(),
+      <if test="codeNumber != null">
+        #{codeNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="producerId != null">
+        #{producerId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaserId != null">
+        #{purchaserId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="makeDate != null">
+        #{makeDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="editById" parameterType="com.lw.traceabilitysurveyreport.entity.TraceabilitySurveyReport">
+    update traceability_survey_report
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="codeNumber != null">
+        code_number = #{codeNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="producerId != null">
+        producer_id = #{producerId,jdbcType=INTEGER},
+      </if>
+      <if test="purchaserId != null">
+        purchaser_id = #{purchaserId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="makeDate != null">
+        make_date = #{makeDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getCount" parameterType="com.lw.traceabilitysurveyreport.entity.TraceabilitySurveyReport"
+          resultType="java.lang.Integer">
+    select count(*)
+    from traceability_survey_report
+  </select>
+  <select id="getList" parameterType="map" resultMap="BaseResultMap">
+    select id, user_id, `type`, add_time, code_number, producer_id, purchaser_id, `status`,
+    make_date, remark
+    from traceability_survey_report
+    order by id
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+</mapper>

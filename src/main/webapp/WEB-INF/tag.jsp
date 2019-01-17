@@ -9,7 +9,6 @@
 <script src="<%=basePath%>resources/plugin/kindeditor/kindeditor-min.js"></script> 
 <script src="<%=basePath%>resources/js/weixin.js"></script>
 <script src="<%=basePath%>resources/duty/js/selectAll.js"></script>
-<script src="<%=basePath%>resources/duty/js/My97DatePicker/WdatePicker.js"></script>
 <link rel="stylesheet" href="<%=basePath%>resources/adpic/css/fileinput.min.css" />
 <script type="text/javascript" src="<%=basePath%>resources/adpic/js/fileinput.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>resources/adpic/js/zh.js"></script>
