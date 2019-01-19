@@ -8,17 +8,17 @@ import java.util.Date;
  * @author 
  */
 public class TraceabilitySurveyReport implements Serializable {
-    private Integer id;
+    private int id;
 
     /**
      * 用户ID
      */
-    private Integer userId;
+    private int userId;
 
     /**
      * 类型
      */
-    private Integer type;
+    private int type;
 
     /**
      * 添加时间
@@ -33,17 +33,17 @@ public class TraceabilitySurveyReport implements Serializable {
     /**
      * 生产者ID
      */
-    private Integer producerId;
+    private int producerId;
 
     /**
      * 购买者D
      */
-    private Integer purchaserId;
+    private int purchaserId;
 
     /**
      * 检验结果 -1 不合格  1 合格   0为默认
      */
-    private Integer status;
+    private int status;
 
     /**
      * 生产日期
@@ -57,27 +57,27 @@ public class TraceabilitySurveyReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public Integer getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -97,27 +97,27 @@ public class TraceabilitySurveyReport implements Serializable {
         this.codeNumber = codeNumber;
     }
 
-    public Integer getProducerId() {
+    public int getProducerId() {
         return producerId;
     }
 
-    public void setProducerId(Integer producerId) {
+    public void setProducerId(int producerId) {
         this.producerId = producerId;
     }
 
-    public Integer getPurchaserId() {
+    public int getPurchaserId() {
         return purchaserId;
     }
 
-    public void setPurchaserId(Integer purchaserId) {
+    public void setPurchaserId(int purchaserId) {
         this.purchaserId = purchaserId;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
