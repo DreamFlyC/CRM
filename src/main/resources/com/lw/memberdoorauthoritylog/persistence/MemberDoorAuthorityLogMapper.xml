@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.memberdoorauthoritylog.persistence.MemberDoorAuthorityLogMapper">
+
+  <parameterMap type="MemberDoorAuthorityLog" id="MemberDoorAuthorityLogparaMap">
+    <parameter property="id" resultMap="id"/>
+    <parameter property="memberId" resultMap="memberId"/>
+    <parameter property="doorId" resultMap="doorId"/>
+    <parameter property="type" resultMap="type"/>
+    <parameter property="loginTime" resultMap="loginTime"/>
+    <parameter property="addTime" resultMap="addTime"/>
+    <parameter property="status" resultMap="status"/>
+  </parameterMap>
+
+  <resultMap id="MemberDoorAuthorityLogResultMap" type="MemberDoorAuthorityLog">
+    <id column="id" property="id"/>
+    <result column="member_id" property="memberId"/>
+    <result column="door_id" property="doorId"/>
+    <result column="type" property="type"/>
+    <result column="login_time" property="loginTime"/>
+    <result column="add_time" property="addTime"/>
+    <result column="status" property="status"/>
+  </resultMap>
+  <sql id="MemberDoorAuthorityLog_Column_List">
+    id,
+    member_id,
+    door_id,
+    `type`,
+    login_time,
+    add_time,
+    `status`
+  </sql>
+  <select id="getById" parameterType="int" resultMap="MemberDoorAuthorityLogResultMap">
+    select
+    <include refid="MemberDoorAuthorityLog_Column_List"/>
+    from member_door_authority_log
+    where id = #{id}
+  </select>
+  <delete id="delById" parameterType="int">
+    delete from member_door_authority_log
+    where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id"
+          parameterType="MemberDoorAuthorityLog" useGeneratedKeys="true">
+    insert into member_door_authority_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="doorId != null">
+        door_id,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="loginTime != null">
+        login_time,
+      </if>
+      add_time,
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        #{memberId},
+      </if>
+      <if test="doorId != null">
+        #{doorId},
+      </if>
+      <if test="type != null">
+        #{type},
+      </if>
+      <if test="loginTime != null">
+        #{loginTime},
+      </if>
+      now(),
+      <if test="status != null">
+        #{status},
+      </if>
+    </trim>
+  </insert>
+  <update id="editById" parameterType="MemberDoorAuthorityLog">
+    update member_door_authority_log
+    <set>
+      <if test="memberId != null">
+        member_id = #{memberId},
+      </if>
+      <if test="doorId != null">
+        door_id = #{doorId},
+      </if>
+      <if test="type != null">
+        `type` = #{type},
+      </if>
+      <if test="loginTime != null">
+        login_time = #{loginTime},
+      </if>
+      <if test="status != null">
+        `status` = #{status},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <select id="getCount" parameterType="MemberDoorAuthorityLog"
+          resultType="int">
+    select count(*)
+    from member_door_authority_log
+  </select>
+  <select id="getList" parameterType="map" resultMap="MemberDoorAuthorityLogResultMap">
+    select id, member_id, door_id, `type`, login_time, add_time, `status`
+    from member_door_authority_log
+    order by id
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+</mapper>

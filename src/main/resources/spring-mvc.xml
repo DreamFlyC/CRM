@@ -40,6 +40,13 @@
 		<!-- <property name="prefix" value="/WEB-INF/"/> -->
 		<property name="suffix" value=".jsp" />
 	</bean>
+
+	<!--验证器-->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<!--注入hibernate的验证器-->
+		<property name="providerClass"  value="org.hibernate.validator.HibernateValidator"/>
+	</bean>
+
  	<!-- 定义文件上传解析器 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- 设定默认编码 -->

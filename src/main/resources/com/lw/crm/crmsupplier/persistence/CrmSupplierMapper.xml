@@ -56,7 +56,7 @@
     groupid, source_id, industry_id, `type`, enterprise_person, bank_type, bank_name, 
     bank_card_number, bank_account_name, sex, position_id, office_phone
   </sql>
-  <select id="getById" parameterType="java.lang.Integer" resultMap="CrmSupplierResultMap">
+  <select id="getById" parameterType="java.lang.Integer" resultMap="CrmSupplierResultMap" >
     select 
     <include refid="CrmSupplierColumn" />
     from crm_supplier
