@@ -150,7 +150,7 @@
                   class="form-control" style="  text-align: left;" type="text" name="startdate" id="startdate"
                   autocomplete="off"
                   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss '})"
-                  value="<fmt:formatDate value='${duty.startdate}' pattern='yyyy-MM-dd HH:mm:ss' />">
+                  value="<fmt:formatDate pattern='yyyy-MM-dd HH:mm:ss' value='${duty.startdate}' />">
             </td>
           </tr>
           <tr>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.traceabilityunit.persistence.TraceabilityUnitMapper">
+
+  <parameterMap id="TraceabilityUnitparaMap" type="TraceabilityUnit">
+    <parameter resultMap="id" property="id"/>
+    <parameter resultMap="name" property="name"/>
+    <parameter resultMap="seq" property="seq"/>
+    <parameter resultMap="type" property="type"/>
+  </parameterMap>
+
+  <resultMap id="TraceabilityUnitResultMap" type="TraceabilityUnit">
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="seq" property="seq"/>
+    <result column="type" property="type"/>
+  </resultMap>
+  <sql id="TraceabilityUnit_Column_List">
+    id,
+    `name`,
+    seq,
+    `type`
+  </sql>
+  <select id="getById" parameterType="int" resultMap="TraceabilityUnitResultMap">
+    select
+    <include refid="TraceabilityUnit_Column_List"/>
+    from traceability_unit
+    where id = #{id}
+  </select>
+  <delete id="delById" parameterType="int">
+    delete from traceability_unit
+    where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="TraceabilityUnit" useGeneratedKeys="true">
+    insert into traceability_unit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name},
+      </if>
+      <if test="seq != null">
+        #{seq},
+      </if>
+      <if test="type != null">
+        #{type},
+      </if>
+    </trim>
+  </insert>
+  <update id="editById" parameterType="TraceabilityUnit">
+    update traceability_unit
+    <set>
+      <if test="name != null">
+        `name` = #{name},
+      </if>
+      <if test="seq != null">
+        seq = #{seq},
+      </if>
+      <if test="type != null">
+        `type` = #{type},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <select id="getCount" parameterType="TraceabilityUnit" resultType="int">
+    select count(*)
+    from traceability_unit
+  </select>
+  <select id="getList" parameterType="map" resultMap="TraceabilityUnitResultMap">
+    select id, `name`, seq, `type`
+    from traceability_unit
+    order by id
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+</mapper>
