@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.foodsetmealitemstock.persistence.FoodSetMealItemStockMapper">
+  <parameterMap id="FoodSetMealItemStockResultMap" type="FoodSetMealItemStock">
+    <parameter resultMap="id"  property="id" />
+    <parameter resultMap="adddate"  property="adddate" />
+    <parameter resultMap="editdate"  property="editdate" />
+    <parameter resultMap="food_set_meal_item_id"  property="foodSetMealItemId" />
+    <parameter resultMap="stock_id"  property="stockId" />
+  </parameterMap>
+  <resultMap id="FoodSetMealItemStockResultMap" type="FoodSetMealItemStock">
+    <id column="id"  property="id" />
+    <result column="adddate"  property="adddate" />
+    <result column="editdate"  property="editdate" />
+    <result column="food_set_meal_item_id"  property="foodSetMealItemId" />
+    <result column="stock_id"  property="stockId" />
+  </resultMap>
+
+  <sql id="FoodSetMealItemStock_Column_List">
+    id, adddate, editdate, food_set_meal_item_id, stock_id
+  </sql>
+  <select id="getById" parameterType="int" resultMap="FoodSetMealItemStockResultMap">
+    select 
+    <include refid="FoodSetMealItemStock_Column_List" />
+    from food_set_meal_item_stock
+    where id = #{id}
+  </select>
+  <delete id="delById" parameterType="int">
+    delete from food_set_meal_item_stock
+    where id in
+<foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="FoodSetMealItemStock" useGeneratedKeys="true">
+    insert into food_set_meal_item_stock
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        adddate,
+      <if test="foodSetMealItemId != null">
+        food_set_meal_item_id,
+      </if>
+      <if test="stockId != null">
+        stock_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      now(),
+      <if test="foodSetMealItemId != null">
+        #{foodSetMealItemId},
+      </if>
+      <if test="stockId != null">
+        #{stockId},
+      </if>
+    </trim>
+  </insert>
+  <update id="editById" parameterType="FoodSetMealItemStock">
+    update food_set_meal_item_stock
+    <set>
+        editdate = now(),
+      <if test="foodSetMealItemId != null">
+        food_set_meal_item_id = #{foodSetMealItemId},
+      </if>
+      <if test="stockId != null">
+        stock_id = #{stockId},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <select id="getCount" parameterType="FoodSetMealItemStock" resultType="int">
+    select count(*) from food_set_meal_item_stock
+  </select>
+  <select id="getList" parameterType="map" resultMap="FoodSetMealItemStockResultMap">
+    select id, adddate, editdate, food_set_meal_item_id, stock_id
+    from food_set_meal_item_stock
+    order by id<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+</mapper>

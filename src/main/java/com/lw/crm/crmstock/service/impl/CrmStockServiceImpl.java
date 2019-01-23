@@ -4,6 +4,7 @@ import com.lw.core.base.service.impl.BaseServiceImpl;
 import com.lw.crm.crmstock.entity.CrmStock;
 import com.lw.crm.crmstock.persistence.CrmStockMapper;
 import com.lw.crm.crmstock.service.ICrmStockService;
+import com.lw.crm.crmstock.vo.CrmStockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,4 +47,8 @@ public class CrmStockServiceImpl extends BaseServiceImpl<CrmStock> implements IC
         return crmStockMapper.getStatisticsByType(map);
     }
 
+	@Override
+	public List<CrmStockVo> getVoList(Map<String, Object> params) {
+		return crmStockMapper.getVoList(params);
+	}
 }

@@ -23,7 +23,7 @@ public class CrmSupplierAction extends BaseAction {
 	private ICrmSupplierService crmSupplierService;
 	
     //信息列表
-    @RequestMapping("/crmsupplier_list")
+    @RequestMapping({"","/crmsupplier_list"})
     public String list(){
         instantPage(20);
         List<CrmSupplier> list=crmSupplierService.getList();

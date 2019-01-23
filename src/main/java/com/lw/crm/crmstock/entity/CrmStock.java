@@ -1,9 +1,7 @@
 package com.lw.crm.crmstock.entity;
 
 import com.lw.crm.crmname.entity.CrmName;
-import com.lw.crm.crmproduct.entity.CrmProduct;
 import com.lw.crm.crmsupplier.entity.CrmSupplier;
-import com.lw.crm.crmunit.entity.CrmUnit;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,9 +22,7 @@ public class CrmStock implements Serializable{
 	private int seq; //序号
 	private String snumber; //供应商商品number
 	private int stock_info_id;
-	private CrmProduct crmProduct;
 
-	private CrmUnit crmUnit;
 	private CrmName crmName;
 	private CrmSupplier crmSupplier;
 
@@ -61,12 +57,6 @@ public class CrmStock implements Serializable{
 	public void setSid(int sid) {
 		this.sid = sid;
 	}
-	public CrmUnit getCrmUnit() {
-		return crmUnit;
-	}
-	public void setCrmUnit(CrmUnit crmUnit) {
-		this.crmUnit = crmUnit;
-	}
 	public CrmName getCrmName() {
 		return crmName;
 	}
@@ -84,12 +74,6 @@ public class CrmStock implements Serializable{
 	}
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	public CrmProduct getCrmProduct() {
-		return crmProduct;
-	}
-	public void setCrmProduct(CrmProduct crmProduct) {
-		this.crmProduct = crmProduct;
 	}
 	public int getId() {
 		return id;
@@ -139,8 +123,26 @@ public class CrmStock implements Serializable{
 	public void setUid(int uid) {
 		this.uid = uid;
 	}
-	
-	
-	
 
+	@Override
+	public String toString() {
+		return "CrmStock{" +
+				"id=" + id +
+				", stocknum='" + stocknum + '\'' +
+				", pid=" + pid +
+				", unit='" + unit + '\'' +
+				", type=" + type +
+				", number='" + number + '\'' +
+				", date=" + date +
+				", uid=" + uid +
+				", price=" + price +
+				", title='" + title + '\'' +
+				", sid=" + sid +
+				", seq=" + seq +
+				", snumber='" + snumber + '\'' +
+				", stock_info_id=" + stock_info_id +
+				", crmName=" + crmName +
+				", crmSupplier=" + crmSupplier +
+				'}';
+	}
 }

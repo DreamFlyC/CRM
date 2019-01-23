@@ -34,13 +34,8 @@
     <result property="seq" column="seq"/>
     <result property="snumber" column="snumber"/>
     <result property="stock_info_id" column="stock_info_id"/>
-    <association property="crmProduct" fetchType="lazy" column="pid"
-                 select="com.lw.crm.crmproduct.persistence.CrmProductMapper.getById"></association>
     <association property="crmName" fetchType="lazy" column="type"
-                 select="com.lw.crm.crmname.persistence.CrmNameMapper.getById"></association>
-    <!--<association property="crmUnit" fetchType="lazy" column="unit" select="com.lw.crm.crmunit.persistence.CrmUnitMapper.getById"></association>-->
-    <association property="crmSupplier" fetchType="lazy" column="sid"
-                 select="com.lw.crm.crmsupplier.persistence.CrmSupplierMapper.getById"></association>
+                 select="com.lw.crm.crmname.persistence.CrmNameMapper.getById"/>
   </resultMap>
 
   <sql id="CrmStockColumn">id,stocknum,pid,type,number,date,uid,price,title,sid,snumber,unit,stock_info_id</sql>
@@ -161,8 +156,7 @@
 
 
   <!-- 根据id查询所有信息 -->
-  <select id="getList" parameterType="map" useCache="false"
-          resultMap="CrmStockResultMap">
+  <select id="getList" parameterType="map" resultMap="CrmStockResultMap">
     select
     <include refid="CrmStockColumn"/>
     from crm_stock
@@ -204,6 +198,65 @@
     <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
   </select>
 
+  <!--``````````````````````-->
+  <select id="getVoList" parameterType="map" resultType="com.lw.crm.crmstock.vo.CrmStockVo">
+    SELECT
+    s.id,
+    s.number,
+    s.title,
+    n.`name`,
+    s.price,
+    u.unit,
+    s.stocknum,
+    s.snumber,
+    sp.supplier,
+    s.uid,
+    s.date
+    FROM
+    crm_stock s
+    LEFT JOIN crm_name n ON s.type = n.type
+    LEFT JOIN crm_unit u ON s.unit = u.id
+    LEFT JOIN crm_supplier sp ON s.sid = sp.id
+    <where>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern1" value="'%' + keyword + '%'"/>
+        or title LIKE #{pattern1}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern2" value="'%' + keyword + '%'"/>
+        or number LIKE #{pattern2}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        <bind name="pattern3" value="'%' + keyword + '%'"/>
+        or snumber LIKE #{pattern3}
+      </if>
+      <if test="sid != null and sid != ''">
+        AND sid =#{sid}
+      </if>
+      <if test="sids != null and sids != ''">
+        AND sid in
+        <foreach item="sidItem" collection="sids" open="(" separator=","
+                 close=")">
+          #{sidItem}
+        </foreach>
+      </if>
+      <if test="id != null and id != ''">
+        and id=#{id}
+      </if>
+      <if test="ids != null and ids != ''">
+        and id in
+        <foreach item="CrmItem" collection="ids" open="(" separator=","
+                 close=")">
+          #{CrmItem}
+        </foreach>
+      </if>
+    </where>
+    order by id desc
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+  <!--``````````````````````-->
+
+
   <!--getById  -->
   <select id="getById" resultMap="CrmStockResultMap"
           parameterType="CrmStock">
@@ -213,7 +266,6 @@
     where id=#{_parameter}
   </select>
 
-  <!--清理数据 -->
   <!-- 批量删除任务信息 -->
   <delete id="delete" parameterType="int">
     delete from crm_stock where id in

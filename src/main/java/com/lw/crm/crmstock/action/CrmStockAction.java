@@ -14,6 +14,7 @@ import com.lw.crm.crmstock.entity.CrmStock;
 import com.lw.crm.crmstock.service.ICrmStockService;
 import com.lw.crm.crmstock.utils.ExportExcelUtil;
 import com.lw.crm.crmstock.utils.ImportExcelUtil;
+import com.lw.crm.crmstock.vo.CrmStockVo;
 import com.lw.crm.crmsupplier.entity.CrmSupplier;
 import com.lw.crm.crmsupplier.service.ICrmSupplierService;
 import com.lw.crm.crmunit.entity.CrmUnit;
@@ -60,7 +61,7 @@ public class CrmStockAction extends BaseAction {
     private ICrmUnitService crmUnitService;
 
     // 信息列表
-    @RequestMapping("/crmstock_list")
+    @RequestMapping({"","/crmstock_list"})
     public String index(@RequestParam(value = "keyword", required = false) String keyword,
                         @RequestParam(value = "supplier", required = false) String supplier) {
         instantPage(20); // 每页几条记录
@@ -80,7 +81,7 @@ public class CrmStockAction extends BaseAction {
             }
             map.put("sids", sidArr);
         }
-        List<CrmStock> crmList = crmStockService.getList(map);
+        List<CrmStockVo> crmList = crmStockService.getVoList(map);
         int total = crmStockService.getCount(map);
         Pager pager = new Pager(super.getPage(), super.getRows(), total);
         pager.setDatas(crmList);
