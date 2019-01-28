@@ -1,216 +1,244 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lw.crm.crmstockinoroutlogitem.persistence.CrmStockInorOutLogItemMapper">
-    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
-    <parameterMap type="CrmStockInorOutLogItem" id="CrmStockInorOutLogItemparaMap">
-        <parameter property="id" resultMap="id"/>
-        <parameter property="number" resultMap="number"/>
-        <parameter property="title" resultMap="title"/>
-        <parameter property="price" resultMap="price"/>
-        <parameter property="type" resultMap="type"/>
-        <parameter property="date" resultMap="date"/>
-        <parameter property="uid" resultMap="uid"/>
-        <parameter property="num" resultMap="num"/>
-        <parameter property="pid" resultMap="pid"/>
-        <parameter property="note" resultMap="note"/>
-        <parameter property="address" resultMap="address"/>
-        <parameter property="inoroutlogno" resultMap="inoroutlogno"/>
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+  <parameterMap type="CrmStockInorOutLogItem" id="CrmStockInorOutLogItemparaMap">
+    <parameter property="id" resultMap="id"/>
+    <parameter property="number" resultMap="number"/>
+    <parameter property="title" resultMap="title"/>
+    <parameter property="price" resultMap="price"/>
+    <parameter property="type" resultMap="type"/>
+    <parameter property="date" resultMap="date"/>
+    <parameter property="uid" resultMap="uid"/>
+    <parameter property="num" resultMap="num"/>
+    <parameter property="pid" resultMap="pid"/>
+    <parameter property="note" resultMap="note"/>
+    <parameter property="address" resultMap="address"/>
+    <parameter property="inoroutlogno" resultMap="inoroutlogno"/>
+    <parameter property="productTime" resultMap="productTime"/>
+    <parameter property="shelfLife" resultMap="shelfLife"/>
+    <parameter property="status" resultMap="status"/>
 
-    </parameterMap>
+  </parameterMap>
 
-    <resultMap type="CrmStockInorOutLogItem" id="CrmStockInorOutLogItemResultMap">
-        <id property="id" column="id"/>
-        <result property="number" column="number"/>
-        <result property="title" column="title"/>
-        <result property="price" column="price"/>
-        <result property="type" column="type"/>
-        <result property="date" column="date"/>
-        <result property="uid" column="uid"/>
-        <result property="num" column="num"/>
-        <result property="pid" column="pid"/>
-        <result property="takeuid" column="takeuid"/>
-        <result property="note" column="note"/>
-        <result property="address" column="address"/>
-        <result property="inoroutlogno" column="inorout_log_no"/>
-        <association property="crmName" column="type" fetchType="lazy"
-                     select="com.lw.crm.crmname.persistence.CrmNameMapper.getByType"></association>
-    </resultMap>
+  <resultMap type="CrmStockInorOutLogItem" id="CrmStockInorOutLogItemResultMap">
+    <id property="id" column="id"/>
+    <result property="number" column="number"/>
+    <result property="title" column="title"/>
+    <result property="price" column="price"/>
+    <result property="type" column="type"/>
+    <result property="date" column="date"/>
+    <result property="uid" column="uid"/>
+    <result property="num" column="num"/>
+    <result property="pid" column="pid"/>
+    <result property="note" column="note"/>
+    <result property="address" column="address"/>
+    <result property="inoroutlogno" column="inorout_log_no"/>
+    <result property="productTime" column="product_time"/>
+    <result property="shelfLife" column="shelf_life"/>
+    <result property="status" column="status"/>
+    <association property="crmName" column="type" fetchType="lazy"
+                 select="com.lw.crm.crmname.persistence.CrmNameMapper.getByType"/>
+  </resultMap>
 
-    <sql id="CrmStockInorOutLogItemColumn">id,number,title,price,type,date,uid,num,pid,note,address,inorout_log_no</sql>
-    <!--新建任务（save）方法 -->
-    <insert id="save" parameterType="CrmStockInorOutLogItem"
-            keyColumn="id" useGeneratedKeys="true">
-        insert into crm_stock_inorout_log_item
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="number != null and number != ''">
-                number,
-            </if>
-            <if test="title != null and title != ''">
-                title,
-            </if>
-            <if test="price != null and price != ''">
-                price,
-            </if>
-            <if test="type != null and type != ''">
-                type,
-            </if>
-            <if test="date != null and date != ''">
-                date,
-            </if>
-            <if test="uid != null and uid != ''">
-                uid,
-            </if>
-            <if test="num != null and num != ''">
-                num,
-            </if>
-            <if test="pid != null and pid != ''">
-                pid,
-            </if>
-            <if test="note != null and note != ''">
-                note,
-            </if>
-            <if test="address != null and address != ''">
-                address,
-            </if>
-            <if test=" inoroutlogno != null and inoroutlogno != ''">
-                inorout_log_no
-            </if>
-        </trim>
-        <trim prefix="values(" suffix=")" suffixOverrides=",">
-            <if test="number != null and number != ''">
-                #{number},
-            </if>
-            <if test="title != null and title != ''">
-                #{title},
-            </if>
-            <if test="price != null and price != ''">
-                #{price},
-            </if>
-            <if test="type != null and type != ''">
-                #{type},
-            </if>
-            <if test="date != null and date != ''">
-                now(),
-            </if>
-            <if test="uid != null and uid != ''">
-                #{uid},
-            </if>
-            <if test="num != null and num != ''">
-                #{num},
-            </if>
-            <if test="pid != null and pid != ''">
-                #{pid},
-            </if>
-            <if test="note != null and note != ''">
-                #{note},
-            </if>
-            <if test="address != null and address != ''">
-                #{address},
-            </if>
-            <if test=" inoroutlogno != null and inoroutlogno != ''">
-                #{inoroutlogno}
-            </if>
-        </trim>
-    </insert>
-    <select id="getList" parameterType="CrmStockInorOutLogItem" resultMap="CrmStockInorOutLogItemResultMap">
-        select * from crm_stock_inorout_log_item
-        where 1=1
-        <if test="number != null and number !=''">
-            AND number=#{number}
-        </if>
-        <if test="inoroutlogno != null and inoroutlogno !=''">
-            AND inorout_log_no=#{inoroutlogno}
-        </if>
-        <if test="ids != null and ids != ''">
-            and id in
-            <foreach item="CrmItem" collection="ids" open="(" separator=","
-                     close=")">
-                #{CrmItem}
-            </foreach>
-        </if>
-        order by id desc
-        <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
-    </select>
+  <sql id="CrmStockInorOutLogItemColumn">id,number,title,price,type,date,uid,num,pid,note,
+    address,inorout_log_no,product_time,shelf_life,status
+  </sql>
+  <!--新建任务（save）方法 -->
+  <insert id="save" parameterType="CrmStockInorOutLogItem"
+          keyColumn="id" useGeneratedKeys="true">
+    insert into crm_stock_inorout_log_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="number != null and number != ''">
+        number,
+      </if>
+      <if test="title != null and title != ''">
+        title,
+      </if>
+      <if test="price != null and price != ''">
+        price,
+      </if>
+      <if test="type != null and type != ''">
+        type,
+      </if>
+      <if test="date != null and date != ''">
+        date,
+      </if>
+      <if test="uid != null and uid != ''">
+        uid,
+      </if>
+      <if test="num != null and num != ''">
+        num,
+      </if>
+      <if test="pid != null and pid != ''">
+        pid,
+      </if>
+      <if test="note != null and note != ''">
+        note,
+      </if>
+      <if test="address != null and address != ''">
+        address,
+      </if>
+      <if test=" productTime != null">
+        product_time,
+      </if>
+      <if test=" shelfLife != null ">
+        shelf_life,
+      </if>
+      <if test=" status != null ">
+        status
+      </if>
+    </trim>
+    <trim prefix="values(" suffix=")" suffixOverrides=",">
+      <if test="number != null and number != ''">
+        #{number},
+      </if>
+      <if test="title != null and title != ''">
+        #{title},
+      </if>
+      <if test="price != null and price != ''">
+        #{price},
+      </if>
+      <if test="type != null and type != ''">
+        #{type},
+      </if>
+      <if test="date != null and date != ''">
+        now(),
+      </if>
+      <if test="uid != null and uid != ''">
+        #{uid},
+      </if>
+      <if test="num != null and num != ''">
+        #{num},
+      </if>
+      <if test="pid != null and pid != ''">
+        #{pid},
+      </if>
+      <if test="note != null and note != ''">
+        #{note},
+      </if>
+      <if test="address != null and address != ''">
+        #{address},
+      </if>
+      <if test=" inoroutlogno != null and inoroutlogno != ''">
+        #{inoroutlogno},
+      </if>
+      <if test=" productTime != null">
+        #{productTime},
+      </if>
+      <if test=" shelfLife != null ">
+        #{shelfLife},
+      </if>
+      <if test=" status != null ">
+        #{status}
+      </if>
+    </trim>
+  </insert>
+  <select id="getList" parameterType="CrmStockInorOutLogItem" resultMap="CrmStockInorOutLogItemResultMap">
+    select * from crm_stock_inorout_log_item
+    where 1=1
+    <if test="number != null and number !=''">
+      AND number=#{number}
+    </if>
+    <if test="inoroutlogno != null and inoroutlogno !=''">
+      AND inorout_log_no=#{inoroutlogno}
+    </if>
+    <if test="ids != null and ids != ''">
+      and id in
+      <foreach item="CrmItem" collection="ids" open="(" separator=","
+               close=")">
+        #{CrmItem}
+      </foreach>
+    </if>
+    order by id desc
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
 
-    <select id="getCount" resultType="int">
-        select count(1) from crm_stock_inorout_log_item
-    </select>
+  <select id="getCount" resultType="int">
+    select count(1) from crm_stock_inorout_log_item
+  </select>
 
-    <select id="getById" resultMap="CrmStockInorOutLogItemResultMap" parameterType="int">
-        select
-        <include refid="CrmStockInorOutLogItemColumn"/>
-        from crm_stock_inorout_log_item where id = #{id}
-    </select>
+  <select id="getById" resultMap="CrmStockInorOutLogItemResultMap" parameterType="int">
+    select
+    <include refid="CrmStockInorOutLogItemColumn"/>
+    from crm_stock_inorout_log_item where id = #{id}
+  </select>
 
-    <!--修改 -->
-    <update id="editById" parameterMap="CrmStockInorOutLogItemparaMap">
-        UPDATE
-        crm_stock_inorout_log_item
-        <set>
-            <if test="number != null and number != ''">
-                number = #{number},
-            </if>
-            <if test="title != null and title != ''">
-                title = #{title},
-            </if>
-            <if test="price != null and price != ''">
-                price = #{price},
-            </if>
-            <if test="type != null and type != ''">
-                type = #{type},
-            </if>
+  <!--修改 -->
+  <update id="editById" parameterMap="CrmStockInorOutLogItemparaMap">
+    UPDATE
+    crm_stock_inorout_log_item
+    <set>
+      <if test="number != null and number != ''">
+        number = #{number},
+      </if>
+      <if test="title != null and title != ''">
+        title = #{title},
+      </if>
+      <if test="price != null and price != ''">
+        price = #{price},
+      </if>
+      <if test="type != null and type != ''">
+        type = #{type},
+      </if>
 
-            <if test="uid != null and uid != ''">
-                uid = #{uid},
-            </if>
-            <if test="num != null and num != ''">
-                num = #{num},
-            </if>
-            <if test=" pid != null and pid != ''">
-                pid = #{pid},
-            </if>
-            <if test="note != null and note != ''">
-                note = #{note},
-            </if>
-            <if test="address != null and address != ''">
-                address = #{address},
-            </if>
-            <if test=" inoroutlogno != null and inoroutlogno != ''">
-                inorout_log_no = #{inoroutlogno},
-            </if>
-        </set>
-        WHERE id = #{id}
-    </update>
+      <if test="uid != null and uid != ''">
+        uid = #{uid},
+      </if>
+      <if test="num != null and num != ''">
+        num = #{num},
+      </if>
+      <if test=" pid != null and pid != ''">
+        pid = #{pid},
+      </if>
+      <if test="note != null and note != ''">
+        note = #{note},
+      </if>
+      <if test="address != null and address != ''">
+        address = #{address},
+      </if>
+      <if test=" inoroutlogno != null and inoroutlogno != ''">
+        inorout_log_no = #{inoroutlogno},
+      </if>
+      <if test=" productTime != null and productTime != ''">
+        product_time = #{productTime},
+      </if>
+      <if test=" status != null and status != ''">
+        status = #{status}
+      </if>
+    </set>
+    WHERE id = #{id}
+  </update>
 
-    <delete id="delById">
-        delete from crm_stock_inorout_log_item where id in
-        <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
-    </delete>
+  <delete id="delById">
+    delete from crm_stock_inorout_log_item where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
 
-    <delete id="delByNumber">
-        delete from crm_stock_inorout_log_item where number =#{number}
-    </delete>
+  <delete id="delByNumber">
+    delete from crm_stock_inorout_log_item where number =#{number}
+  </delete>
 
-    <select id="getStatisticsByType" parameterType="map" resultMap="CrmStockInorOutLogItemResultMap">
-        select sum(price) as price,type from crm_stock_inorout_log_item
-        <where>
-            <if test="type !=null and type !=''">
-                and type in
-                <foreach item="crmItem" collection="type" open="("
-                         separator="," close=")">
-                    #{crmItem}
-                </foreach>
-            </if>
-            <if test="sDate!=null and sDate != ''">
-                <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
+  <select id="getStatisticsByType" parameterType="map" resultMap="CrmStockInorOutLogItemResultMap">
+    select sum(price) as price,type from crm_stock_inorout_log_item
+    <where>
+      <if test="type !=null and type !=''">
+        and type in
+        <foreach item="crmItem" collection="type" open="("
+                 separator="," close=")">
+          #{crmItem}
+        </foreach>
+      </if>
+      <if test="sDate!=null and sDate != ''">
+        <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') >=
 			 DATE_FORMAT(#{sDate} , '%Y-%m-%d') ]]>
-            </if>
-            <if test="eDate!=null and eDate != ''">
-                <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <=
+      </if>
+      <if test="eDate!=null and eDate != ''">
+        <![CDATA[ and DATE_FORMAT(date, '%Y-%m-%d ') <=
 			 DATE_FORMAT(#{eDate} , '%Y-%m-%d ') ]]>
-            </if>
-        </where>
-        group by type
-    </select>
+      </if>
+    </where>
+    group by type
+  </select>
 </mapper>

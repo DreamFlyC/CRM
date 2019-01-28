@@ -245,4 +245,5 @@ public class CrmStockInorOutLogAction extends BaseAction{
 		String fileName = prefix + sheetName;
 		ExportExcelUtil.exportExcel(response, dataList, sheetName, fileName);
 	}
+
 }
