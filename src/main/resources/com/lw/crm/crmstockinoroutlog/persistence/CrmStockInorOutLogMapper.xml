@@ -27,7 +27,7 @@
     <result property="takeuid" column="takeuid" />
     <result property="note" column="note" />
     <result property="address" column="address" />
-    <association property="crmStockType" column="type" fetchType="lazy" select="com.lw.crm.crmstocktype.persistence.CrmStockTypeMapper.getByType"></association>
+	<association property="crmStockType" column="type" select="com.lw.crm.crmstocktype.persistence.CrmStockTypeMapper.getByType"/>
 </resultMap>
       
       

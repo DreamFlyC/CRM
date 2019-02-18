@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-"http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lw.crm.crmname.persistence.CrmNameMapper">
-<cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
-<parameterMap type="CrmName" id="CrmNameparaMap">
-<parameter property="id" resultMap="id" />
-<parameter property="name" resultMap="name" />
-<parameter property="type" resultMap="type" />
-<parameter property="date" resultMap="date" />
-</parameterMap>
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+  <parameterMap type="CrmName" id="CrmNameparaMap">
+    <parameter property="id" resultMap="id"/>
+    <parameter property="name" resultMap="name"/>
+    <parameter property="type" resultMap="type"/>
+    <parameter property="date" resultMap="date"/>
+  </parameterMap>
 
-		<resultMap type="CrmName" id="CrmNameResultMap">
-	        <id property="id" column="id" />
-	        <result property="name" column="name" />
-	        <result property="type" column="type" />
-	        <result property="date" column="date" />
-        </resultMap>
-        <sql id="CrmNameColumn">id,name,type,date</sql>
- <!--新建任务（save）方法 -->
-	<insert id="save" parameterType="CrmName"
-		keyColumn="id" useGeneratedKeys="true">
-<![CDATA[
+  <resultMap type="CrmName" id="CrmNameResultMap">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="type" column="type"/>
+    <result property="date" column="date"/>
+  </resultMap>
+  <sql id="CrmNameColumn">id,name,type,date</sql>
+  <!--新建任务（save）方法 -->
+  <insert id="save" parameterType="CrmName"
+          keyColumn="id" useGeneratedKeys="true">
+    <![CDATA[
     		insert into crm_name (name,type) values (#{name},#{type});
     	]]>
-		
-	</insert>
- <select id="getList" parameterType="CrmName" resultMap="CrmNameResultMap">
- 		select * from crm_name
- </select>
- 
- <select id="getCount" resultType="int">
-	   select count(1) from crm_name
-	</select>
-	
-	<select id="getById" resultMap="CrmNameResultMap" parameterType="int">
-	   select <include refid="CrmNameColumn"/> from crm_name where id = #{id}
-	</select>
-	
-	<!--修改 -->
-	<update id="editById"  parameterMap="CrmNameparaMap">
-		UPDATE
-		crm_name
-		<set>
-			<if test="name != null and name != ''">
-				name = #{name},
-			</if>
-		</set>
-		WHERE id = #{id}
-	</update>
-	
-	<delete id="delById">
-	   delete from crm_name where id in
-	   <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
-	</delete>
-	
-	<select id="getByType" parameterType="Integer" resultMap="CrmNameResultMap"> 
-	SELECT * FROM crm_name where `type`=#{type}
-	</select>
+
+  </insert>
+  <select id="getList" parameterType="CrmName" resultMap="CrmNameResultMap">
+    select * from crm_name
+  </select>
+
+  <select id="getCount" resultType="int">
+    select count(1) from crm_name
+  </select>
+
+  <select id="getById" resultMap="CrmNameResultMap" parameterType="int">
+    select
+    <include refid="CrmNameColumn"/>
+    from crm_name where id = #{id}
+  </select>
+
+  <!--修改 -->
+  <update id="editById" parameterMap="CrmNameparaMap">
+    UPDATE
+    crm_name
+    <set>
+      <if test="name != null and name != ''">
+        name = #{name},
+      </if>
+    </set>
+    WHERE id = #{id}
+  </update>
+
+  <delete id="delById">
+    delete from crm_name where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+
+  <select id="getByType" parameterType="Integer" resultMap="CrmNameResultMap">
+    SELECT * FROM crm_name where `type`=#{type}
+  </select>
 </mapper>

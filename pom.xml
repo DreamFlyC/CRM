@@ -33,8 +33,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <!-- 表示开发的时候引入，发布的时候不会加载此包 -->
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
 
@@ -43,6 +42,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
+      <scope>provided</scope>
     </dependency>
     <!-- spring注入包 -->
     <dependency>
@@ -177,7 +177,7 @@
       <artifactId>mybatis</artifactId>
       <version>3.4.6</version>
     </dependency>
-    <!-- ehchache -->
+    <!-- ehcache -->
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
@@ -201,7 +201,7 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.42</version>
+      <version>8.0.15</version>
     </dependency>
 
     <!-- jstl标签 -->

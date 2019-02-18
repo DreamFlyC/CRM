@@ -38,8 +38,7 @@
     <result property="productTime" column="product_time"/>
     <result property="shelfLife" column="shelf_life"/>
     <result property="status" column="status"/>
-    <association property="crmName" column="type" fetchType="lazy"
-                 select="com.lw.crm.crmname.persistence.CrmNameMapper.getByType"/>
+    <association property="crmName" column="type" select="com.lw.crm.crmname.persistence.CrmNameMapper.getByType"/>
   </resultMap>
 
   <sql id="CrmStockInorOutLogItemColumn">id,number,title,price,type,date,uid,num,pid,note,
@@ -182,7 +181,6 @@
       <if test="type != null and type != ''">
         type = #{type},
       </if>
-
       <if test="uid != null and uid != ''">
         uid = #{uid},
       </if>

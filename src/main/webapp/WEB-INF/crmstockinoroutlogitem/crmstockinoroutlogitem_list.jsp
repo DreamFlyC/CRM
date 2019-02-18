@@ -131,7 +131,7 @@
                                 + ids.substring(0, ids.length - 1),
                             type: "get",
                             success: function (e) {
-                                if (e == "success") {
+                                if (e === "success") {
                                     //移除被删除的列表
                                     /* for (var did = 0; did < ids.split(',').length; did++) {
                                       if (ids.split(',')[did] != "") {
@@ -140,7 +140,7 @@
                                     } */
                                     window.location.reload(true);
                                     LW.message.show("删除成功！");
-                                } else if (e == "error") {
+                                } else if (e === "error") {
                                     LW.message.show("删除失败！");
                                 } else {
                                     LW.message.show("未知错误！");
@@ -193,9 +193,10 @@
                 <td><fmt:formatDate value="${item.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                 <td><lw:SysUserTag style="" htmltype="1" value="${item.uid}"/></td>
                 <td>${item.pid}</td>
-                <td id="productTime${item.id}"><fmt:formatDate value="${item.productTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                <td id="productTime${item.id}"><fmt:formatDate value="${item.productTime}"
+                                                               pattern="yyyy-MM-dd HH:mm:ss"/></td>
                 <td id="shelfLife${item.id}">${item.shelfLife}</td>
-                <td id="${item.id}" class="daojishi">
+                <td id="${item.id}" data-status="${item.status}" class="daojishi">
                     <c:choose>
                         <c:when test="${item.status==0}">
                             <button class="btn btn-success btn-sm">正常</button>
@@ -253,7 +254,7 @@
 <div class="cls"></div>
 <script type="text/javascript">
     $("#page_crmstockinoroutlogitem_list").parent().attr("class", "active");
-    LW.crmstockinoroutlogitem = new Object();
+    LW.crmstockinoroutlogitem = {};
     LW.crmstockinoroutlogitem.del = function (id) {
         LW.message.confirm("id", "您确认要继续删除吗?", function (r) {
             if (r) {
@@ -261,40 +262,51 @@
             }
         });
     }
-    
+
     $(function () {
         $(".daojishi").each(function () {
-            countTime($(this).attr("id"));
+            if($(this).data("status")===1){
+                countTime($(this).attr("id"));
+            }
         })
     });
-    
+
     function countTime(id) {
         //获取生产日期
-        var productTime = Date.parse($("#productTime"+id).text());
+        var productTime = Date.parse($("#productTime" + id).text());
         //获取过期时间
-        var overTime = Number(productTime + Number($("#shelfLife"+id).text()*1000*60*60*24));
+        var overTime = Number(productTime + Number($("#shelfLife" + id).text() * 1000 * 60 * 60 * 24));
         //获取当前时间
-        var nowTime=Date.parse(new Date());
+        var nowTime = Date.parse(new Date());
         //时间差
         var leftTime = overTime - nowTime;
         //定义变量 d,h,m,s保存倒计时的时间
         var d, h, m, s;
         if (leftTime >= 0) {
             d = Math.floor(leftTime / 1000 / 60 / 60 / 24);
-            h = Math.floor(leftTime / 1000 / 60 / 60 % 24);
-            m = Math.floor(leftTime / 1000 / 60 % 60);
-            s = Math.floor(leftTime / 1000 % 60);
-
+            h = formatTime(Math.floor(leftTime / 1000 / 60 / 60 % 24));
+            m = formatTime(Math.floor(leftTime / 1000 / 60 % 60));
+            s = formatTime(Math.floor(leftTime / 1000 % 60));
             //将倒计时赋值到div中
-            $("#d"+id).html(d);
-            $("#h"+id).html(h);
-            $("#m"+id).html(m);
-            $("#s"+id).html(s);
-            //递归每秒调用countTime方法，显示动态时间效果
-            setTimeout(countTime, 1000,id);
-        }else{
-            $("#time").text();
+            $("#d" + id).html(d);
+            $("#h" + id).html(h);
+            $("#m" + id).html(m);
+            $("#s" + id).html(s);
+            setTimeout(countTime, 1000, id);
+        } else {
+           //代表已过期
+            $.ajax({
+
+            })
+            $("#"+id).html("<button class=\"btn btn-danger btn-sm\">已过期</button>");
         }
+    }
+    
+    function formatTime(s) {
+        if(Number(s)<10){
+            s="0"+s;
+        }
+        return s;
     }
 </script>
 <%@ include file="../foot.jsp" %>

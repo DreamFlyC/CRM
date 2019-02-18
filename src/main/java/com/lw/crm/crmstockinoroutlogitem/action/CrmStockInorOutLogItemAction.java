@@ -38,8 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.time.DateUtils.addDays;
-
 @Controller("CrmStockInorOutLogItemAction")
 @RequestMapping(value = "/manage/crmstockinoroutlogitem")
 public class CrmStockInorOutLogItemAction extends BaseAction {
@@ -85,7 +83,7 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.GET)
-    public String addcrmstockinoroutlogitem() {
+    public String addCrmStockInorOutLogItem() {
         List<CrmName> crmNameList = crmNameService.getList();
         getRequest().setAttribute("crmNameList", crmNameList);
         return "/WEB-INF/crmstockinoroutlogitem/crmstockinoroutlogitem_add";
@@ -93,9 +91,9 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
 
     // 新增信息
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String addcrmstockinoroutlogitem(CrmStockInorOutLog crmStockInorOutLog) {
-
-        Users user = ContextUtil.getContextLoginUser();//登录账号的信息
+    public String addCrmStockInorOutLogItem(CrmStockInorOutLog crmStockInorOutLog) {
+        //登录账号的信息
+        Users user = ContextUtil.getContextLoginUser();
         if (null != String.valueOf(user.getId())) {
             crmStockInorOutLog.setUid(String.valueOf(user.getId()));
         }
@@ -106,7 +104,7 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
 
     // 新增明细
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addcrmstockinoroutlogitemtwo(HttpServletRequest request, HttpServletResponse response) {
+    public String addCrmStockInorOutLogItemTwo(HttpServletRequest request, HttpServletResponse response) {
         List<CrmName> crmNameList = crmNameService.getList();
         getRequest().setAttribute("crmNameList", crmNameList);
 
@@ -174,14 +172,14 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
 
     // 删除信息
     @RequestMapping(value = "/del/{id}")
-    public String deletecrmstockinoroutlogitem(@PathVariable("id") int id, HttpServletResponse response) {
+    public String deleteCrmStockInorOutLogItem(@PathVariable("id") int id, HttpServletResponse response) {
         crmStockInorOutLogItemService.del(id);
         return "redirect:../crmstockinoroutlogitem_list";
     }
 
     // 修改信息
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String updatecrmstockinoroutlogitem(CrmStockInorOutLogItem crmStockInorOutLogItem,
+    public String updateCrmStockInorOutLogItem(CrmStockInorOutLogItem crmStockInorOutLogItem,
                                                HttpServletResponse response, String id) {
         System.err.println("id++++++++++====" + id);
         crmStockInorOutLogItem.setId(id);
@@ -199,7 +197,7 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
 
     // 编辑前根据id获取信息
     @RequestMapping(value = "/{id}")
-    public String viewcrmstockinoroutlogitem(@PathVariable("id") int id) {
+    public String viewCrmStockInorOutLogItem(@PathVariable("id") int id) {
         CrmStockInorOutLogItem crmStockInorOutLogItem = crmStockInorOutLogItemService.get(id);
         getRequest().setAttribute("crmStockInorOutLogItem", crmStockInorOutLogItem);
 
@@ -216,7 +214,7 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
     // 新增明细3
     @RequestMapping(value = "/saveitem")
     @ResponseBody
-    public Json saveitem(CrmStockInorOutLogItem crmStockInorOutLogItem, String number) {
+    public Json saveItem(CrmStockInorOutLogItem crmStockInorOutLogItem, String number) {
 		
 		  /*Users user=ContextUtil.getContextLoginUser();//登录账号的信息
 		  if(null!=String.valueOf(user.getId())) {
@@ -225,16 +223,16 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
         //即将过期设置的天数
         final int overdue = 7;
         int shelfLife = crmStockInorOutLogItem.getShelfLife();
-        Date overdueDate = addDays(crmStockInorOutLogItem.getProductTime(), shelfLife);
+        Date overdueDate = DateUtils.addDays(crmStockInorOutLogItem.getProductTime(), shelfLife);
         Date freshDate = DateUtils.addDays(new Date(), overdue);
 
         if (System.currentTimeMillis() < overdueDate.getTime() && overdueDate.getTime() > freshDate.getTime()) {
             crmStockInorOutLogItem.setStatus(0);
-        }else if(System.currentTimeMillis() < overdueDate.getTime() && overdueDate.getTime() <= freshDate.getTime()){
+        } else if (System.currentTimeMillis() < overdueDate.getTime() && overdueDate.getTime() <= freshDate.getTime()) {
             crmStockInorOutLogItem.setStatus(1);
-        }else if(System.currentTimeMillis() > overdueDate.getTime()){
+        } else if (System.currentTimeMillis() > overdueDate.getTime()) {
             crmStockInorOutLogItem.setStatus(2);
-        }else {
+        } else {
             crmStockInorOutLogItem.setStatus(-1);
         }
 
@@ -250,7 +248,7 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
     // 根据number查询list
     @RequestMapping(value = "/getlistbynumber")
     @ResponseBody
-    public Json getlistbynumber(String number, HttpServletResponse response) {
+    public Json getListByNumber(String number, HttpServletResponse response) {
         Map param = new HashMap();
         param.put("number", number);
         List<CrmStockInorOutLogItem> list = crmStockInorOutLogItemService.getList(param);
@@ -431,8 +429,8 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
      */
     @RequestMapping(value = "/export")
     @ResponseBody
-    public void Export(@RequestParam(value = "ids", defaultValue = "") Integer[] ids, HttpServletResponse response) throws Exception {
-        Map map = new HashMap();
+    public void export(@RequestParam(value = "ids", defaultValue = "") Integer[] ids, HttpServletResponse response) throws Exception {
+        Map<String, Object> map = new HashMap<>();
         if (ids.length > 0) {
             map.put("ids", ids);
         }

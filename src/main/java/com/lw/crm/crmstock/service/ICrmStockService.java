@@ -9,23 +9,11 @@ import java.util.Map;
 
 public interface ICrmStockService extends IBaseService<CrmStock> {
 
-    //删除所有信息
-    public int delete(int[] id);
+    int delete(int[] id);
 
-    /**
-     * @param id
-     * @return
-     */
-    public int getCount(int id);
+    int getCount(int id);
 
-    /**
-     * @param param
-     * @return
-     * @Desc
-     * @author CZP
-     */
-    public int getStockBySidAndSnumber(Map param);
-
+    int getStockBySidAndSnumber(Map param);
 
     List<CrmStock> getStatisticsByType(Map<String, Object> map);
 
