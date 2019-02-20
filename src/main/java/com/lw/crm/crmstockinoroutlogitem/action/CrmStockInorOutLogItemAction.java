@@ -441,4 +441,9 @@ public class CrmStockInorOutLogItemAction extends BaseAction {
         ExportExcelUtil.exportExcel(response, dataList, sheetName, fileName);
     }
 
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public String tt(){
+        return "好";
+    }
 }

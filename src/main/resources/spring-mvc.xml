@@ -18,21 +18,19 @@
 	
 	<!--json数据配置 防止406错误  -->
 	<mvc:annotation-driven>
-        <mvc:message-converters register-defaults="true">
+        <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter" /> 
             <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
                 <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
-	
+
+	<mvc:default-servlet-handler/>
+
 	<!--  配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd-->
-	<mvc:resources mapping="/images/**" location="/images/" />
-	<mvc:resources mapping="/js/**" location="/js/" />
-	<mvc:resources mapping="/css/**" location="/css/" />
-	<mvc:resources mapping="/fonts/**" location="/fonts/" />
-	<mvc:resources mapping="/helpdoc/**" location="/helpdoc/" />
-	
+	<mvc:resources mapping="/resources/**/" location="/resources/"/>
+
 	<!-- 定义跳转的文件的前后缀 ，视图模式配置-->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
