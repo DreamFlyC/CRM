@@ -12,9 +12,19 @@ public class LgsDoorInfo implements Serializable {
 
     private String name;
 
-    private String doorNo;
+    private int doorNo;
 
     private String remark;
+
+    private int sq;
+
+    public int getSq() {
+        return sq;
+    }
+
+    public void setSq(int sq) {
+        this.sq = sq;
+    }
 
     public int getId() {
         return id;
@@ -32,11 +42,11 @@ public class LgsDoorInfo implements Serializable {
         this.name = name;
     }
 
-    public String getDoorNo() {
+    public int getDoorNo() {
         return doorNo;
     }
 
-    public void setDoorNo(String doorNo) {
+    public void setDoorNo(int doorNo) {
         this.doorNo = doorNo;
     }
 

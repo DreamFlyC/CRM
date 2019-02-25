@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.sysworktaskprocessing.persistence.SysWorktaskProcessingMapper">
+  <parameterMap id="SysWorktaskProcessingParaMap" type="SysWorktaskProcessing">
+    <parameter resultMap="id" property="id"/>
+    <parameter resultMap="processing_number" property="processingNumber"/>
+    <parameter resultMap="title" property="title"/>
+    <parameter resultMap="remark" property="remark"/>
+    <parameter resultMap="progress" property="progress"/>
+    <parameter resultMap="type" property="type"/>
+    <parameter resultMap="start_time" property="startTime"/>
+    <parameter resultMap="end_time" property="endTime"/>
+    <parameter resultMap="add_time" property="addTime"/>
+    <parameter resultMap="status" property="status"/>
+  </parameterMap>
+  <resultMap id="SysWorktaskProcessingResultMap" type="SysWorktaskProcessing">
+    <id column="id" property="id"/>
+    <result column="processing_number" property="processingNumber"/>
+    <result column="title" property="title"/>
+    <result column="remark" property="remark"/>
+    <result column="progress" property="progress"/>
+    <result column="type" property="type"/>
+    <result column="start_time" property="startTime"/>
+    <result column="end_time" property="endTime"/>
+    <result column="add_time" property="addTime"/>
+    <result column="status" property="status"/>
+  </resultMap>
+  <sql id="SysWorktaskProcessing_Column_List">
+    id,
+    processing_number,
+    title,
+    remark,
+    progress,
+    `type`,
+    start_time,
+    end_time,
+    add_time,
+    `status`
+  </sql>
+  <select id="getById" parameterType="int" resultMap="SysWorktaskProcessingResultMap">
+    select
+    <include refid="SysWorktaskProcessing_Column_List"/>
+    from sys_worktask_processing
+    where id = #{id}
+  </select>
+  <delete id="delById" parameterType="int">
+    delete from sys_worktask_processing
+    where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="SysWorktaskProcessing" useGeneratedKeys="true">
+    insert into sys_worktask_processing
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="processingNumber != null">
+        processing_number,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="progress != null">
+        progress,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      add_time,
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="processingNumber != null">
+        #{processingNumber},
+      </if>
+      <if test="title != null">
+        #{title},
+      </if>
+      <if test="remark != null">
+        #{remark},
+      </if>
+      <if test="progress != null">
+        #{progress},
+      </if>
+      <if test="type != null">
+        #{type},
+      </if>
+      <if test="startTime != null">
+        #{startTime},
+      </if>
+      <if test="endTime != null">
+        #{endTime},
+      </if>
+      now(),
+      <if test="status != null">
+        #{status},
+      </if>
+    </trim>
+  </insert>
+  <update id="editById" parameterType="SysWorktaskProcessing">
+    update sys_worktask_processing
+    <set>
+      <if test="processingNumber != null">
+        processing_number = #{processingNumber},
+      </if>
+      <if test="title != null">
+        title = #{title},
+      </if>
+      <if test="remark != null">
+        remark = #{remark},
+      </if>
+      <if test="progress != null">
+        progress = #{progress},
+      </if>
+      <if test="type != null">
+        `type` = #{type},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime},
+      </if>
+      <if test="status != null">
+        `status` = #{status},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <select id="getCount" parameterType="SysWorktaskProcessing" resultType="int">
+    select count(*)
+    from sys_worktask_processing
+  </select>
+  <select id="getList" parameterType="map" resultMap="SysWorktaskProcessingResultMap">
+    select id, processing_number, title, remark, progress, `type`, start_time, end_time,
+    add_time, `status`
+    from sys_worktask_processing
+    order by id
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+
+  <select id="getTongji" parameterType="map" resultType="com.lw.sysworktaskprocessing.vo.SysWorktaskProcessingVo">
+    SELECT status,count(*) as count
+    from sys_worktask_processing
+    <where>
+      <if test="startTime != null">
+        <![CDATA[ and DATE_FORMAT(start_time, '%Y-%m-%d ') >=
+				 DATE_FORMAT(#{startTime} , '%Y-%m-%d') ]]>
+      </if>
+      <if test="endTime != null">
+        <![CDATA[ and DATE_FORMAT(end_time, '%Y-%m-%d ') <=
+				 DATE_FORMAT(#{endTime} , '%Y-%m-%d ') ]]>
+      </if>
+    </where>
+    group by `status`
+    ORDER BY `status`
+  </select>
+
+</mapper>

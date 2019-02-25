@@ -2,30 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lw.lgsdoorinfo.persistence.LgsDoorInfoMapper">
   <parameterMap id="LgsDoorInfoparaMap" type="LgsDoorInfo">
-    <parameter resultMap="id"  property="id" />
-    <parameter resultMap="name"  property="name" />
-    <parameter resultMap="door_no"  property="doorNo" />
-    <parameter resultMap="remark"  property="remark" />
+    <parameter resultMap="id" property="id"/>
+    <parameter resultMap="name" property="name"/>
+    <parameter resultMap="door_no" property="doorNo"/>
+    <parameter resultMap="remark" property="remark"/>
+    <parameter resultMap="sq" property="sq"/>
   </parameterMap>
   <resultMap id="LgsDoorInfoResultMap" type="LgsDoorInfo">
-    <id column="id"  property="id" />
-    <result column="name"  property="name" />
-    <result column="door_no"  property="doorNo" />
-    <result column="remark"  property="remark" />
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="door_no" property="doorNo"/>
+    <result column="remark" property="remark"/>
+    <result column="sq" property="sq"/>
   </resultMap>
   <sql id="LgsDoorInfo_Column_List">
-    id, `name`, door_no, remark
+    id,
+    `name`,
+    door_no,
+    remark,
+    sq
   </sql>
   <select id="getById" parameterType="int" resultMap="LgsDoorInfoResultMap">
-    select 
-    <include refid="LgsDoorInfo_Column_List" />
+    select
+    <include refid="LgsDoorInfo_Column_List"/>
     from lgs_door_info
     where id = #{id}
   </select>
   <delete id="delById" parameterType="int">
     delete from lgs_door_info
     where id in
-<foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
   </delete>
   <insert id="save" keyColumn="id" keyProperty="id" parameterType="LgsDoorInfo" useGeneratedKeys="true">
     insert into lgs_door_info
@@ -68,11 +74,13 @@
     where id = #{id}
   </update>
   <select id="getCount" parameterType="LgsDoorInfo" resultType="int">
-    select count(*) from lgs_door_info
+    select count(*)
+    from lgs_door_info
   </select>
   <select id="getList" parameterType="map" resultMap="LgsDoorInfoResultMap">
     select id, `name`, door_no, remark
     from lgs_door_info
-    order by id<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+    order by sq
+    <if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
   </select>
 </mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//-//mybatis.org//DT//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.wxkf.persistence.WxkfMapper">
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+  <parameterMap type="Wxkf" id="WxkfparaMap">
+    <parameter property="id" resultMap="id"/>
+    <parameter property="kfaccount" resultMap="kf_account"/>
+    <parameter property="kfheadimgurl" resultMap="kf_headimgurl"/>
+    <parameter property="kfid" resultMap="kf_id"/>
+    <parameter property="kfnick" resultMap="kf_nick"/>
+    <parameter property="kfwx" resultMap="kf_wx"/>
+    <parameter property="nvitewx" resultMap="nvite_wx"/>
+    <parameter property="inviteexpiretime" resultMap="invite_expire_time"/>
+    <parameter property="invitestatus" resultMap="invite_status"/>
+    <parameter property="adddatetime" resultMap="add_datetime"/>
+  </parameterMap>
+  <resultMap type="Wxkf" id="WxkfResultMap">
+    <id property="id" column="id"/>
+    <result property="kfaccount" column="kf_account"/>
+    <result property="kfheadimgurl" column="kf_headimgurl"/>
+    <result property="kfid" column="kf_id"/>
+    <result property="kfnick" column="kf_nick"/>
+    <result property="kfwx" column="kf_wx"/>
+    <result property="nvitewx" column="nvite_wx"/>
+    <result property="inviteexpiretime" column="invite_expire_time"/>
+    <result property="invitestatus" column="invite_status"/>
+    <result property="adddatetime" column="add_datetime"/>
+  </resultMap>
+  <sql id="BasLocationColumn">id,
+  kf_account,
+  kf_headimgurl,
+  kf_id,
+  kf_nick,
+  kf_wx,
+  nvite_wx,
+  invite_expire_time,
+  invite_status,
+  add_datetime</sql>
+  <insert id="save" parameterMap="WxkfparaMap" keyProperty="id" useGeneratedKeys="true">
+    insert into wxkf(kf_account, kf_headimgurl, kf_id, kf_nick, kf_wx, nvite_wx, invite_expire_time, invite_status,
+                     add_datetime)
+    values (#{kfaccount}, #{kfheadimgurl}, #{kfid}, #{kfnick}, #{kfwx}, #{nvitewx}, #{inviteexpiretime},
+            #{invitestatus}, now())
+  </insert>
+  <select id="getList" resultMap="WxkfResultMap" parameterType="int">
+    select * from wxkf
+    order by id asc
+    <if test="firstResult!=null and maxResult!=null">
+      limit #{firstResult} , #{maxResult};
+    </if>
+  </select>
+
+  <select id="getCount" resultType="int">
+    select count(*)
+    from wxkf
+  </select>
+  <select id="getById" resultMap="WxkfResultMap" parameterType="int">
+    select<include refid="BasLocationColumn"/>from wxkf where id=#{id}
+  </select>
+  <update id="editById" parameterMap="WxkfparaMap">
+    update wxkf
+    <set>
+      <if test="kfaccount != null ">
+        kf_account=#{kfaccount},
+      </if>
+      <if test="kfheadimgurl != null ">
+        kf_headimgurl=#{kfheadimgurl},
+      </if>
+      <if test="kfid != null ">
+        kf_id=#{kfid},
+      </if>
+      <if test="kfnick != null ">
+        kf_nick=#{kfnick},
+      </if>
+      <if test="kfwx != null ">
+        kf_wx=#{kfwx},
+      </if>
+      <if test="nvitewx != null ">
+        nvite_wx=#{nvitewx},
+      </if>
+      <if test="inviteexpiretime != null">
+        invite_expire_time=#{inviteexpiretime},
+      </if>
+      <if test="invitestatus != null ">
+        invite_status=#{invitestatus}
+      </if>
+    </set>
+    where id=#{id}
+  </update>
+  <!--删除-->
+  <delete id="delById">
+    delete from wxkf where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">#{item}</foreach>
+  </delete>
+</mapper>

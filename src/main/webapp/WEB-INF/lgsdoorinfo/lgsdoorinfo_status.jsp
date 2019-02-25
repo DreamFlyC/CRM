@@ -153,28 +153,23 @@
                         $("#panel-doorinfo").html(panel);
                         let ul = [];
                         ul = createCols(data);
-                        while (ul.length % 4 !== 0) {
-                            let result = "";
-                            result += "<ul class=\"list-group\">";
-                            result += "</ul>";
-                            ul.push(result);
-                        }
-                        let ulLength = ul.length;
+                         while (ul.length % 4 !== 0) {
+                             let result = "";
+                             result += "<ul class=\"list-group\">";
+                             result += "</ul>";
+                             ul.push(result);
+                         }
+                        ul = ul.reverse();
+                        let index = 0;
                         $(".container-body").each(function () {
-                            if (ulLength > 2) {
-                                $(this).append(ul[ulLength]);
-                                $(this).append(ul[ulLength = ulLength - 1]);
-                            } else if (ulLength === 2) {
-                                $(this).append(ul[1]);
-                                $(this).append(ul[0]);
-                            } else {
-                                return false;
+                            if (index < ul.length) {
+                                $(this).append(ul[index]);
+                                $(this).append(ul[index + 1]);
                             }
-                            ulLength--;
+                            index = index + 2;
                         });
-                        
                         $(".container-title").each(function (index) {
-                            $(this).html($(".container-title").length-index).css;
+                            $(this).html($(".container-title").length - index);
                         })
                     }
 
@@ -187,7 +182,7 @@
             //生成列数 ul
             function createCols(data) {
                 let ul = [];
-                let li = [];
+                let li;
                 li = createRows(data);
                 if (li.length > 0) {
                     let result = "";
@@ -205,9 +200,7 @@
             //生成行数 li
             function createRows(data) {
                 const length = data.msg.length;
-                // let rows = Math.ceil((length - FIRST_MOUTH) / COMMON_MOUTH) + 1;
                 let liArr = [];
-                // let count = FIRST_MOUTH - 1;
                 if (length > FIRST_MOUTH) {
                     let result = "";
                     for (let i = 0; i < (COMMON_MOUTH - FIRST_MOUTH); i++) {
@@ -217,19 +210,9 @@
                         result += "<li class=\"list-group-item mouth-free\" data-logic-no=" + data.msg[i].doorNo + " data-index=" + data.msg[i].doorNo + ">" + data.msg[i].doorNo + "</li>"
                     }
                     liArr.push(result);
-                    /*for (let a = 0; a < rows - 1; a++) {
-                        result = "";
-                        for (let i = 0; i < COMMON_MOUTH; i++) {
-                            result += "<li class=\"list-group-item mouth-free\" data-logic-no=" + data.msg[count].doorNo + " data-index=" + data.msg[count].doorNo + ">" + data.msg[count].doorNo + "</li>"
-                            count++;
-                            console.log(count);
-                        }
-                        liArr.push(result);
-                    }*/
-
                     let count = 0;
                     result = "";
-                    var i=0;
+                    let i;
                     for (i = FIRST_MOUTH; i < length; i++) {
                         count++;
                         result += "<li class=\"list-group-item mouth-free\" data-logic-no=" + data.msg[i].doorNo + " data-index=" + data.msg[i].doorNo + ">" + data.msg[i].doorNo + "</li>"
@@ -239,10 +222,12 @@
                         }
                     }
                     //最后一个数组
-                    for(i;i<length;i++){
-                        result += "<li class=\"list-group-item mouth-free\"  data-logic-no=" + data.msg[i].doorNo + " data-index=" + data.msg[i].doorNo + ">" + data.msg[i].doorNo + "</li>"
+                    if (i < length) {
+                        for (i; i < length; i++) {
+                            result += "<li class=\"list-group-item mouth-free\"  data-logic-no=" + data.msg[i].doorNo + " data-index=" + data.msg[i].doorNo + ">" + data.msg[i].doorNo + "</li>"
+                        }
+                        liArr.push(result);
                     }
-                    liArr.push(result);
                 }
                 return liArr;
             }
@@ -250,7 +235,7 @@
             // 生成总的panel-container
             function createPanel(data) {
                 const length = data.msg.length;
-                let count = Math.ceil((length - (FIRST_MOUTH + COMMON_MOUTH)) / (COMMON_MOUTH * 4)) + 1;
+                let count = Math.ceil((length - (FIRST_MOUTH + COMMON_MOUTH * 3)) / (COMMON_MOUTH * 4)) + 1;
                 let result = "";
                 for (let i = 0; i < count; i++) {
                     result += "<div class=\"col-xs-12 col-sm-12 col-md-6 col-lg-4\">\n" +
