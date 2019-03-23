@@ -17,3 +17,5 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>  
 
 <script type="text/javascript">var picServer="${picServer}"</script>
+
+<script src="<%=basePath%>resources/js/jquery-ui.min.js" type="text/javascript"></script>

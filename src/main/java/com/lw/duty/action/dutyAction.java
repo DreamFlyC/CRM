@@ -64,10 +64,10 @@ public class dutyAction extends BaseAction {
      * @author CZP
      * @Date 2018年10月18日 上午11:33:21
      */
-    @RequestMapping(value = "/duty_list")
+    @RequestMapping(value = {"","/duty_list"})
     public String query(String number, String title, String sdate, String edate, Model model, String type,
                         String dkey) {
-        instantPage(20); // 每页几条记录
+        instantPage(20);
 		/*Duty obj = new Duty();
 		if (dkey != null) {
 			obj.setDkey(Integer.parseInt(dkey));
@@ -114,7 +114,7 @@ public class dutyAction extends BaseAction {
         getRequest().setAttribute("dkey", dkey);
 
         getRequest().setAttribute("total", total); // 查询当前一共几条记录
-        return "/WEB-INF/duty/duty_list";
+        return "/WEB-INF/duty/duty_list2";
     }
 
     /**
@@ -133,14 +133,14 @@ public class dutyAction extends BaseAction {
         List<ShiroActionUsersGroup> shiroActionUsersGroupList = shiroActionUsersGroupService.getList();
         getRequest().setAttribute("shiroActionUsersGroupList", shiroActionUsersGroupList);
 
-        return "/WEB-INF/duty/duty_add";
+        return "/WEB-INF/duty/duty_add2";
     }
 
     /**
      * @param request
      * @param response
      * @return
-     * @Desc 根据部门获取人员  JSON
+     * @Desc 根据部门获取人员
      * @author CZP
      * @Date 2018年10月18日 上午11:16:11
      */

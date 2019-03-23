@@ -55,7 +55,6 @@
   <link href="<%=basePath%>resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
   <link href="<%=basePath%>resources/fonts/fontawesome-webfont.woff2"/>
   <script src="<%=basePath%>resources/js/jquery.min.js" type="text/javascript"></script>
-  <script src="<%=basePath%>resources/js/jquery-ui.min.js" type="text/javascript"></script>
   <script src="<%=basePath%>resources/plugin/bootstrap3.3.2/js/bootstrap.min.js"></script>
   <script src="<%=basePath%>resources/valid/Validform_v5.3.2_min.js"></script>
   <script src="<%=basePath%>resources/plugin/kindeditor/kindeditor-min.js"></script>

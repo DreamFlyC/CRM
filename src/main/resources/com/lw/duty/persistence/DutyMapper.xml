@@ -74,9 +74,9 @@
 			select="com.lw.duty.persistence.DutyUserMapper.getList" /> 
 		<collection property="dutyDepart" fetchType="eager" column="departId" 
 		select="com.lw.duty.persistence.DutyDepartMapper.getListById" /> 
-		<!-- <collection property="usersgroupitemList" ofType="ShiroActionUsersGroup" 
+		 <collection property="usersgroupitemList" ofType="ShiroActionUsersGroup"
 		fetchType="lazy" column="{ids=usersgroupid}" 
-		select="com.lw.shiroaction.usersgroup.persistence.ShiroActionUsersGroupMapper.getListByUsersGroupid"/> -->
+		select="com.lw.shiroaction.usersgroup.persistence.ShiroActionUsersGroupMapper.getListByUsersGroupid"/>
 	</resultMap>
 	
 	<resultMap type="FeedBack" id="FeedBackResultMap">

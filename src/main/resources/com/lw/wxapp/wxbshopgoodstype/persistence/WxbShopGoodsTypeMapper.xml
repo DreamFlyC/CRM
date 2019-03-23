@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lw.wxapp.wxbshopgoodstype.persistence.WxbShopGoodsTypeMapper">
+  <resultMap id="WxbShopGoodsTypeResultMap" type="WxbShopGoodsType">
+    <id column="id"  property="id" />
+    <result column="member_miniapp_id"  property="memberMiniappId" />
+    <result column="goods_id"  property="goodsId" />
+    <result column="type_name"  property="typeName" />
+    <result column="surplus_num"  property="surplusNum" />
+    <result column="price"  property="price" />
+    <result column="is_delete"  property="isDelete" />
+    <result column="add_time"  property="addTime" />
+    <result column="add_ip"  property="addIp" />
+  </resultMap>
+  <sql id="WxbShopGoodsType_Column_List">
+    id, member_miniapp_id, goods_id, type_name, surplus_num, price, is_delete, add_time, 
+    add_ip
+  </sql>
+  <select id="getById" parameterType="java.lang.Integer" resultMap="WxbShopGoodsTypeResultMap">
+    select 
+    <include refid="WxbShopGoodsType_Column_List" />
+    from wxb_shop_goods_type
+    where id = #{id}
+  </select>
+  <delete id="delById" parameterType="java.lang.Integer">
+    delete from wxb_shop_goods_type
+    where id in
+<foreach close=")" collection="ids" index="index" item="item" open="(" separator=",">#{item}</foreach>
+  </delete>
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="WxbShopGoodsType" useGeneratedKeys="true">
+    insert into wxb_shop_goods_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberMiniappId != null">
+        member_miniapp_id,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="typeName != null">
+        type_name,
+      </if>
+      <if test="surplusNum != null">
+        surplus_num,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+        add_time,
+      <if test="addIp != null">
+        add_ip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberMiniappId != null">
+        #{memberMiniappId},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId},
+      </if>
+      <if test="typeName != null">
+        #{typeName},
+      </if>
+      <if test="surplusNum != null">
+        #{surplusNum},
+      </if>
+      <if test="price != null">
+        #{price},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=BIT},
+      </if>
+      now(),
+      <if test="addIp != null">
+        #{addIp},
+      </if>
+    </trim>
+  </insert>
+  <update id="editById" parameterType="WxbShopGoodsType">
+    update wxb_shop_goods_type
+    <set>
+      <if test="memberMiniappId != null">
+        member_miniapp_id = #{memberMiniappId},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId},
+      </if>
+      <if test="typeName != null">
+        type_name = #{typeName},
+      </if>
+      <if test="surplusNum != null">
+        surplus_num = #{surplusNum},
+      </if>
+      <if test="price != null">
+        price = #{price},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=BIT},
+      </if>
+      <if test="addIp != null">
+        add_ip = #{addIp},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <select id="getCount" parameterType="WxbShopGoodsType" resultType="java.lang.Integer">
+    select count(*) from wxb_shop_goods_type
+  </select>
+  <select id="getList" parameterType="map" resultMap="WxbShopGoodsTypeResultMap">
+    select id, member_miniapp_id, goods_id, type_name, surplus_num, price, is_delete, 
+    add_time, add_ip
+    from wxb_shop_goods_type
+    order by id<if test="firstResult!=null and maxResult!=null">limit #{firstResult} , #{maxResult};</if>
+  </select>
+
+</mapper>
